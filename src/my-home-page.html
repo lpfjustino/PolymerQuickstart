@@ -1,0 +1,69 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="home-page">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <div class="circle">1</div>
+      <h1>View One</h1>
+      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
+      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+    </div>
+
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-3">Bem vindos!</h1>
+        <p>Se voce tem um bicho de estimacao e preza pelo seu cuidado, nao deixe de conhecer nossos produtos e servicos!</p>
+        <p><a class="btn btn-primary btn-lg" href="cadastrar-usuario.html" role="button">Cadastre-se &raquo;</a></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Produtos</h2>
+          <p>Temos uma enorme variedade de produtos para seu amigao! Petiscos, acessorios, brinquedos, racao, camas e muito mais. </p>
+          <p><a class="btn btn-secondary" href="compra-produto.html" role="button">Veja mais &raquo;</a></p>
+        </div>
+        <div class="col-md-6">
+          <h2>Serviços</h2>
+          <p>Prezamos pelo cuidado do seu bichinho! Agende consultas, banhos, tosas e ate passeios! </p>
+          <p><a class="btn btn-secondary" href="venda-servico.html" role="button">Veja mais&raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; PetLoiro 2017</p>
+      </footer>
+    </div> <!-- /container -->
+  </template>
+
+  <script>
+    class MyHomePage extends Polymer.Element {
+      static get is() { return 'home-page'; }
+    }
+
+    window.customElements.define(MyHomePage.is, MyHomePage);
+  </script>
+</dom-module>
