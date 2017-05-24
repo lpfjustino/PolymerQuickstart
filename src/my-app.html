@@ -20,7 +20,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="my-icons.html">
+
 
 <!-- SERÁÁÁÁ
 <link rel="lazy-import" href="my-home-page.html">
@@ -28,9 +30,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="my-view3.html">
 <link rel="lazy-import" href="my-view404.html">
 -->
-
-<!-- Bootstrap core CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 
 <dom-module id="my-app">
 	<template>
@@ -71,6 +70,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				color: black;
 				font-weight: bold;
 			}
+
+			.login-icon {
+				width: 40px;
+				height: 40px;
+				fill: darkblue;
+			}
 		</style>
 
 		<app-location route="{{route}}"></app-location>
@@ -99,7 +104,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					<app-toolbar>
 						<paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
 						<div main-title>PetLoiro</div>
-						<a name="my-login" href="/my-login"><iron-icon icon="maps:directions-bus"></iron-icon></a>
+						<a name="my-login" href="/my-login"><iron-icon icon="icons:account-circle" class="login-icon"></iron-icon></a>
 					</app-toolbar>
 				</app-header>
 
