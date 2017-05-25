@@ -52,56 +52,57 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}
 		</style>
 
-	<div class="card" id="login-container">
-		<div id="unauthenticated" hidden$="[[storedUser.loggedin]]">
-			<h1>Log In</h1>
+		<app-location route="{{route}}"></app-location>
 
-			<p>Autentique-se para acessar suas informações</p>
-			
-			<template is="dom-if" if="[[error]]">
- 				<p class="alert-error"><strong>Erro:</strong> [[error]]</p>
-			</template>
+		<iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage>
+		<app-data key="userData" data="{{storedUser}}"></app-data>
 
-			<paper-input label="Username" value={{formData.username}}></paper-input>
+		<iron-ajax
+			id="registerLoginAjax"
+			method="post"
+			content-type="application/json"
+			handle-as="text"
+			with-credentials="true"
+			on-response="handleUserResponse"
+			on-error="handleUserError"></iron-ajax>
 
-			<paper-input label="Password" value={{formData.password}}></paper-input>
+		<div class="card" id="login-container">
+			<div id="unauthenticated" hidden$="[[storedUser.loggedin]]">
+				<h1>Log In</h1>
 
-			<div class="wrapper-btns">
-				<paper-button raised class="primary" on-tap="postLogin">Log In</paper-button>
-				<paper-button class="link" on-tap="postRegister">Sign Up</paper-button>
-			</div>
+				<p>Autentique-se para acessar suas informações</p>
+				
+				<template is="dom-if" if="[[error]]">
+	 				<p class="alert-error"><strong>Erro:</strong> [[error]]</p>
+				</template>
 
-			<div id="authenticated" hidden$="[[!storedUser.loggedin]]">
-				<h2>Hello, [[storedUser.name]]!</h2>
-				<p>You are currently logged in. You can access <a href="/secret-quotes">Secret Quotes</a>!</p>
-			</div>
+				<paper-input label="Username" value={{formData.username}}></paper-input>
+				<paper-input label="Password" value={{formData.password}}></paper-input>
 
-			<app-location route="{{route}}"></app-location>
-			<iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage>
-			<app-data key="userData" data="{{storedUser}}"></app-data>
-		</div>	
-	</div>
+				<div class="wrapper-btns">
+					<paper-button raised class="primary" on-tap="postLogin">Log In</paper-button>
+					<paper-button class="link" on-tap="postRegister">Sign Up</paper-button>
+				</div>
 
-	<iron-ajax
-		id="registerLoginAjax"
-		method="post"
-		content-type="application/json"
-		handle-as="text"
-		on-response="handleUserResponse"
-		on-error="handleUserError"></iron-ajax>
+				<div id="authenticated" hidden$="[[!storedUser.loggedin]]">
+					<h2>Hello, [[storedUser.name]]!</h2>
+					<p>You are currently logged in. You can access <a href="/secret-quotes">Secret Quotes</a>!</p>
+				</div>
+			</div>	
+		</div>
+			<form>
+				<br>
+				Solução provisória para permitir navegação sem o uso de JS:
+				<br>
+				<a href="homescreen-usuario.html">Ir para a página de cliente</a>
+				<br>
+				<a href="homescreen-admin.html">Ir para a página de administradores</a>
+				<br>
+			</form>
+		</template>
 
-		<form>
-			<br>
-			Solução provisória para permitir navegação sem o uso de JS:
-			<br>
-			<a href="homescreen-usuario.html">Ir para a página de cliente</a>
-			<br>
-			<a href="homescreen-admin.html">Ir para a página de administradores</a>
-			<br>
-		</form>
-	</template>
+		<script>
 
-	<script>
 		class MyLogin extends Polymer.Element {
 			static get is() { return 'my-login'; }
 
@@ -117,7 +118,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}
 
 			_setReqBody() {
-				console.log(this.get('formData'))
 				this.$.registerLoginAjax.body = this.formData;
 			}
 

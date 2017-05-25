@@ -66,7 +66,6 @@ function getUserScheme(req) {
 }
 
 app.post('/users', function(req, res) {
-  
   var userScheme = getUserScheme(req);  
 
   if (!userScheme.username || !req.body.password) {
@@ -89,7 +88,6 @@ app.post('/users', function(req, res) {
 });
 
 app.post('/sessions/create', function(req, res) {
-
   var userScheme = getUserScheme(req);
 
   if (!userScheme.username || !req.body.password) {
@@ -111,3 +109,4 @@ app.post('/sessions/create', function(req, res) {
     access_token: createAccessToken()
   });
 });
+
