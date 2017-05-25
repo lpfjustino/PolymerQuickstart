@@ -62,15 +62,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
  				<p class="alert-error"><strong>Erro:</strong> [[error]]</p>
 			</template>
 
-			<paper-input>
-				<label>Username</label>
-				<iron-input bind-value={{formData.username}}><input id="username" type="text" value="{{formData::input}}"></iron-input>
-			</paper-input>
+			<paper-input label="Username" value={{formData.username}}></paper-input>
 
-			<paper-input>
-				<label>Password</label>
-				<iron-input bind-value={{formData.password}}><input id="password" type="password" value="{{formData::input}}"></iron-input>
-			</paper-input>
+			<paper-input label="Password" value={{formData.password}}></paper-input>
 
 			<div class="wrapper-btns">
 				<paper-button raised class="primary" on-tap="postLogin">Log In</paper-button>
@@ -117,13 +111,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					error: String,
 					formData: {
 						type: Object,
-						value: {},
+						value: () => { return { username: '', password: '' } }
 					},
 				}
 			}
 
 			_setReqBody() {
-				console.log(this.formData)
+				console.log(this.get('formData'))
 				this.$.registerLoginAjax.body = this.formData;
 			}
 
