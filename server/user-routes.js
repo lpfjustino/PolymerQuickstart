@@ -6,11 +6,20 @@ var express = require('express'),
 var app = module.exports = express.Router();
 
 // XXX: This should be a database of users :).
-var users = [{
-  id: 1,
-  username: 'gonto',
-  password: 'gonto'
-}];
+var users = [
+  {
+    id: 1,
+    username: 'admin',
+    password: 'admin',
+    role: 'admin'
+  },
+  {
+    id: 2,
+    username: 'user',
+    password: 'user',
+    role: 'user'
+  }
+  ];
 
 function createIdToken(user) {
   return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*60*5 });
@@ -106,7 +115,8 @@ app.post('/sessions/create', function(req, res) {
 
   res.status(201).send({
     id_token: createIdToken(user),
-    access_token: createAccessToken()
+    access_token: createAccessToken(),
+    role: user.role
   });
 });
 

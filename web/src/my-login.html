@@ -54,15 +54,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 		<app-location route="{{route}}"></app-location>
 
-		<iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage>
 		<app-data key="userData" data="{{storedUser}}"></app-data>
+		<iron-localstorage
+			name="user-storage"
+			on-iron-localstorage-load="redirect"
+			value="{{storedUser}}"></iron-localstorage>
 
 		<iron-ajax
 			id="registerLoginAjax"
 			method="post"
 			content-type="application/json"
 			handle-as="text"
-			with-credentials="true"
 			on-response="handleUserResponse"
 			on-error="handleUserError"></iron-ajax>
 
@@ -71,6 +73,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				<h1>Log In</h1>
 
 				<p>Autentique-se para acessar suas informações</p>
+
 				
 				<template is="dom-if" if="[[error]]">
 	 				<p class="alert-error"><strong>Erro:</strong> [[error]]</p>
@@ -83,22 +86,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					<paper-button raised class="primary" on-tap="postLogin">Log In</paper-button>
 					<paper-button class="link" on-tap="postRegister">Sign Up</paper-button>
 				</div>
-
-				<div id="authenticated" hidden$="[[!storedUser.loggedin]]">
-					<h2>Hello, [[storedUser.name]]!</h2>
-					<p>You are currently logged in. You can access <a href="/secret-quotes">Secret Quotes</a>!</p>
-				</div>
 			</div>	
+			<div id="authenticated" hidden$="[[!storedUser.loggedin]]">
+				<h2>Hello, [[storedUser.name]]!</h2>
+				<p>You are currently logged in. You can access <a href="/secret-quotes">Secret Quotes</a>!</p>
+			</div>
 		</div>
-			<form>
-				<br>
-				Solução provisória para permitir navegação sem o uso de JS:
-				<br>
-				<a href="homescreen-usuario.html">Ir para a página de cliente</a>
-				<br>
-				<a href="homescreen-admin.html">Ir para a página de administradores</a>
-				<br>
-			</form>
 		</template>
 
 		<script>
@@ -108,12 +101,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 			static get properties() {
 				return {
-					storedUser: Object,
+					storedUser: {
+						type: Object,
+						notify: true
+					},
 					error: String,
 					formData: {
 						type: Object,
 						value: () => { return { username: '', password: '' } }
 					},
+				}
+			}
+
+			// TODO: Corrigir o bug em que o redirecionamento só acontece
+			// no momento do login ou no momento que a página é acessada
+			// pela primeira vez, mas não nas próximas vezes que a página
+			// de login é acessada.
+			redirect() {
+				if(this.storedUser) {
+					// Redirect user or admin to their own homescreen
+					if(this.storedUser.role == 'user')
+						this.set('route.path', '/homescreen-usuario');
+					else if(this.storedUser.role == 'admin')
+						this.set('route.path', '/homescreen-admin');
+					else
+						this.set('route.path', '/my-view404');
 				}
 			}
 
@@ -142,11 +154,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 						name: this.formData.username,
 						id_token: response.id_token,
 						access_token: response.access_token,
+						role: response.role,
 						loggedin: true
 					};
 
-					// Redirect user to user homescreen
-					this.set('route.path', '/homescreen-usuario');
+					this.redirect();
 				}
 
 				// reset form data
