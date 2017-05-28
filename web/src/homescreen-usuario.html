@@ -1,36 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>PetLoiro Cliente</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
-
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Cliente PetLoiro</a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="index.html">Inicío</a></li>
-      <li><a href="compra-produto.html">Comprar produtos</a></li>
-      <li><a href="cadastro-animais.html">Cadastrar bichinho</a></li>
-      <li><a href="agendamento.html">Agendar horário</a></li>
-      <li><a href="venda-servico.html">Contratar serviços</a></li>
-      <li><a href="carrinho.html">Carrinho</a></li>
-      
-    </ul>
-  </div>
-</nav>
-<!-- 
-<div class="container">
-  <h3>Inverted Navbar</h3>
-  <p>An inverted navbar is black instead of gray.</p>
-</div>
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-</body>
-</html>
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="homescreen-usuario">
+	<template>
+	<style include="shared-styles">
+		:host {
+		display: block;
+
+		padding: 10px;
+		}
+	</style>
+
+	<div class="card">
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="/homescreen-usuario">Cliente PetLoiro</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="/">Inicío</a></li>
+					<li><a href="/compra-produto">Comprar produtos</a></li>
+					<li><a href="/cadastro-animais">Cadastrar bichinho</a></li>
+					<li><a href="/agendamento">Agendar horário</a></li>
+					<li><a href="/venda-servico">Contratar serviços</a></li>
+					<li><a href="/carrinho">Carrinho</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	</template>
+
+	<script>
+	class HomeScreenUsuario extends Polymer.Element {
+		static get is() { return 'homescreen-usuario'; }
+	}
+
+	window.customElements.define(HomeScreenUsuario.is, HomeScreenUsuario);
+	</script>
+</dom-module>

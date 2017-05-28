@@ -1,39 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>PetLoiro Admin</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
-
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Admin PetLoiro</a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="index.html">Home</a></li>
-      <li><a href="cadastro-adm.html">Cadastrar administrador</a></li>
-      <li><a href="cadastro-cliente.html">Cadastrar cliente</a></li>
-      <li><a href="remover-administrador.html">Remover administrador</a></li>
-      <li><a href="cadastro-animais.html">Cadastrar bichinho</a></li>
-      <li><a href="cadastro-produto.html">Criar/Editar novo produto</a></li>
-      <li><a href="cadastro-servico.html">Criar/Editar novo serviço</a></li>
-      <li><a href="gerenciar-agendamento.html">Agendar serviço</a></li>
-      <li><a href="remover-agendamento.html">Remover agendamento</a></li>
-      <li><a href="historicos-vendas.html">Tabela de ganhos</a></li>
-    </ul>
-  </div>
-</nav>
-<!-- 
-<div class="container">
-  <h3>Inverted Navbar</h3>
-  <p>An inverted navbar is black instead of gray.</p>
-</div>
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-</body>
-</html>
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="homescreen-admin">
+  <template>
+  <style include="shared-styles">
+    :host {
+    display: block;
+
+    padding: 10px;
+    }
+  </style>
+
+  <div class="card">
+    <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+      <a class="navbar-brand" href="/homescreen-admin">Admin PetLoiro</a>
+      </div>
+            
+      <ul class="nav navbar-nav">
+      <li><a href="/">Home</a></li>
+      <li><a href="/cadastro-adm">Cadastrar administrador</a></li>
+      <li><a href="/cadastro-cliente">Cadastrar cliente</a></li>
+      <li><a href="/remover-administrador">Remover administrador</a></li>
+      <li><a href="/cadastro-animais">Cadastrar bichinho</a></li>
+      <li><a href="/cadastro-produto">Criar/Editar novo produto</a></li>
+      <li><a href="/cadastro-servico">Criar/Editar novo serviço</a></li>
+      <li><a href="/gerenciar-agendamento">Agendar serviço</a></li>
+      <li><a href="/remover-agendamento">Remover agendamento</a></li>
+      <li><a href="/historicos-vendas">Tabela de ganhos</a></li>
+      </ul>
+    </div>
+    </nav>
+  </template>
+
+  <script>
+  class HomeScreenAdmin extends Polymer.Element {
+    static get is() { return 'homescreen-admin'; }
+  }
+
+  window.customElements.define(HomeScreenAdmin.is, HomeScreenAdmin);
+  </script>
+</dom-module>

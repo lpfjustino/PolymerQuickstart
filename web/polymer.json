@@ -7,9 +7,9 @@
     "src/venda-servico.html",
     "src/compra-produto.html",
     "src/my-login.html",
+    "src/homescreen-admin.html",
+    "src/homescreen-usuario.html",
 
-    "src/my-view2.html",
-    "src/my-view3.html",
     "src/my-view404.html"
   ],
   "sources": [
