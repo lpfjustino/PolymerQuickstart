@@ -1,0 +1,17 @@
+[
+	{
+		"id": 1,
+		"nome": "Banho",
+		"preco": 50
+	},
+	{
+		"id": 2,
+		"nome": "Tosa",
+		"preco": 60
+	},
+	{
+		"id": 3,
+		"nome": "Tosa Higiênica",
+		"preco": 110
+	}
+]

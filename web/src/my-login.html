@@ -83,8 +83,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				<paper-input label="Password" value={{formData.password}}></paper-input>
 
 				<div class="wrapper-btns">
-					<paper-button raised class="primary" on-tap="postLogin">Log In</paper-button>
-					<paper-button class="link" on-tap="postRegister">Sign Up</paper-button>
+					<paper-button raised class="primary" on-tap="postLogin">Entrar</paper-button>
+					<paper-button class="link" on-tap="signUp">Cadastrar</paper-button>
 				</div>
 			</div>
 		</div>
@@ -135,10 +135,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				this.$.registerLoginAjax.generateRequest();
 			}
 
-			postRegister() {
-				this.$.registerLoginAjax.url = 'http://localhost:3001/users';
-				this._setReqBody();
-				this.$.registerLoginAjax.generateRequest();
+			//postRegister() {
+			//	this.$.registerLoginAjax.url = 'http://localhost:3001/users';
+			//	this._setReqBody();
+			//	this.$.registerLoginAjax.generateRequest();
+			//}
+
+			signUp() {
+				this.set('route.path', '/cadastro-cliente')
 			}
 
 			handleUserResponse(event) {

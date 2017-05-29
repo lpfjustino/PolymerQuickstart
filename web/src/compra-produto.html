@@ -9,151 +9,109 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
 <link rel="import" href="shared-styles.html">
+<!--<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">-->
+
+<!-- include classes in the main document -->
 
 <dom-module id="compra-produto">
 	<template>
 	<style include="shared-styles">
+
 		:host {
 		display: block;
 
 		padding: 10px;
 		}
-	</style>
+		<style is="custom-style" include="iron-flex iron-flex-alignment">
+		
 
-	<p>PIROCA</p>
-	<div class="card">
-		<div id="products" class="row list-group">
-			<div class="item	col-xs-4 col-lg-4">
-				<div class="thumbnail">
-					<img class="group list-group-image" src="http://www.zolux.com/118394-large_default/soho-pet-carrier-black.jpg" alt="" />
-					<div class="caption">
-						<h4 class="group inner list-group-item-heading">
-							Bolsa transportadora</h4>
-						<p class="group inner list-group-item-text">
-							Com essa bolsa, voce podera transportar seu cachorro de pequeno porte facilmente em viagens.</p>
-						<div class="row">
-							<div class="col-xs-12 col-md-6">
-								<p class="lead">
-									R$160.00</p>
-							</div>
-							<div class="col-xs-12 col-md-6">
-								<a class="btn btn-success" href="carrinho.html">Adicionar ao Carrinho</a>
-							</div>
-						</div>
+	
+	</style>
+	
+	
+		<iron-ajax auto url="../products.json" handle-as="json" last-response="{{ajaxResponse}}"></iron-ajax>
+			<div id="pcId" layout horizontal wrap>
+		    <template is="dom-repeat" items="[[ajaxResponse]]" index-as="i">
+		    
+			    <div class = "card">
+			    	<div>
+				    	<img class="group list-group-image" src = {{item.img_produto}} alt="" />
+				    </div>
+		            <span>{{item.nome_produto}}</span>
+		            <div>
+		            	<p>Descrição:<br>{{item.descricao}}</p>
 					</div>
-				</div>
-			</div>
-			<div class="item	col-xs-4 col-lg-4">
-				<div class="thumbnail">
-					<img class="group list-group-image" src="http://www.zolux.com/136770-large_default/bella-club-pet-beds-pink.jpg" alt="" />
-					<div class="caption">
-						<h4 class="group inner list-group-item-heading">
-							Conjunto de camas rosa</h4>
-						<p class="group inner list-group-item-text">
-							Conjunto de camas. Contem 3 camas com 3 tamanhos distintos: grande, medio e pequeno.</p>
-						<div class="row">
-							<div class="col-xs-12 col-md-6">
-								<p class="lead">
-									R$300.00</p>
-							</div>
-							<div class="col-xs-12 col-md-6">
-								<a class="btn btn-success" href="carrinho.html">Adicionar ao Carrinho</a>
-							</div>
-						</div>
+					<div>
+						<p>R$ {{item.preco}}
 					</div>
-				</div>
-			</div>
-			<div class="item	col-xs-4 col-lg-4">
-				<div class="thumbnail">
-					<img class="group list-group-image" src="http://www.zolux.com/136766-large_default/bella-club-pet-beds-grey.jpg" alt="" />
-					<div class="caption">
-						<h4 class="group inner list-group-item-heading">
-							Conjunto de camas cinza</h4>
-						<p class="group inner list-group-item-text">
-							Conjunto de camas. Contem 3 camas com 3 tamanhos distintos: grande, medio e pequeno.</p>
-						<div class="row">
-							<div class="col-xs-12 col-md-6">
-								<p class="lead">
-									R$290.00</p>
-							</div>
-							<div class="col-xs-12 col-md-6">
-								<a class="btn btn-success" href="carrinho.html">Adicionar ao Carrinho</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="item	col-xs-4 col-lg-4">
-				<div class="thumbnail">
-					<img class="group list-group-image" src="http://www.collars-4-dogs.com/waterproof/green-stripe-dog-collar.jpg" alt="" />
-					<div class="caption">
-						<h4 class="group inner list-group-item-heading">
-							Coleira verde resistente a agua</h4>
-						<p class="group inner list-group-item-text">
-							Coleira a prova d'agua. Reforcada com alca de ferro. Ideal para cachorros de pequeno porte.</p>
-						<div class="row">
-							<div class="col-xs-12 col-md-6">
-								<p class="lead">
-									R$21.00</p>
-							</div>
-							<div class="col-xs-12 col-md-6">
-								<a class="btn btn-success" href="carrinho.html">Adicionar ao Carrinho</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="item	col-xs-4 col-lg-4">
-				<div class="thumbnail">
-					<img class="group list-group-image" src="http://www.collars-4-dogs.com/waterproof/blue-stripe-dog-collar.jpg" alt="" />
-					<div class="caption">
-						<h4 class="group inner list-group-item-heading">
-							Coleira azul resistente a agua</h4>
-						<p class="group inner list-group-item-text">
-							Coleira a prova d'agua. Reforcada com alca de ferro. Ideal para cachorros de pequeno porte.</p>
-						<div class="row">
-							<div class="col-xs-12 col-md-6">
-								<p class="lead">
-									R$21.00</p>
-							</div>
-							<div class="col-xs-12 col-md-6">
-								<a class="btn btn-success" href="carrinho.html">Adicionar ao Carrinho</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="item	col-xs-4 col-lg-4">
-				<div class="thumbnail">
-					<img class="group list-group-image" src="http://www.collars-4-dogs.com/waterproof/pink-stripe-dog-collar.jpg" alt="" />
-					<div class="caption">
-						<h4 class="group inner list-group-item-heading">
-							Coleira rosa resistente a agua</h4>
-						<p class="group inner list-group-item-text">
-							Coleira a prova d'agua. Reforcada com alca de ferro. Ideal para cachorros de pequeno porte.</p>
-						<div class="row">
-							<div class="col-xs-12 col-md-6">
-								<p class="lead">
-									R$21.00</p>
-							</div>
-							<div class="col-xs-12 col-md-6">
-								<a class="btn btn-success" href="carrinho.html">Adicionar ao Carrinho</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+
+					<paper-input  label="Quantidade" value= "{{item.i.amount}}"></paper-input>
+					<paper-button raised="" on-tap = "to_Cart" data-args = "item.i" class="indigo" role="button" tabindex="0" animated="" elevation="1" aria-disabled="false">Adicionar ao Carrinho</paper-button>
+	            </div>	
+        	</template>
+        	</div>
+	
 	
 	</template>
 
 	<script>
+	//value = {{amount}}
 	class CompraProduto extends Polymer.Element {
 		static get is() { return 'compra-produto'; }
-	}
 
+		static get properties() {
+			return {
+				amount: Number,
+				//TENTEI FAZER UM VETOR DE AMOUNT AQUI EMBAIXO, AÍ FICA UM AMOUNT PRA CADA INPUT, ANTES TAVA SÓ UM NUMBER
+				// SÓ QUE DAÍ TERIA O PROBLEMA DE TER ITEM.I.AMOUNT.I, PQ TEM UM OBSERVER PRA CADA AMOUNT... DEFINIDO AQUI EMBAIXO TB
+				/*
+				amount: { 
+					type: Array,
+					value: [],
+				},
+				*/
+
+				//observer que vi no stackoverflow
+				observers: ['onInputChange(*.amount)'],
+				//isso aqui era o vetor de amount na real que eu tava usando, mas acredito que só o vetor amount seja o suficiente, só to mantendo
+				//aqui pq tava funcionando gambiarradamente (o que mostrei pra ti e pro boss)
+				items_in_cart: {
+					type: Array,
+					value: []
+				}
+				
+				
+			};
+		}
+		//essa função retorna o json do item inserido no carrinho
+		onInputChange(changedInput) {console.log(changedInput);}
+		to_Cart(e) {
+			//console.log(this.$.pcId.querySelector(All('paper-input').value));
+			//console.log(e.target);
+			//se não está no carrinho e a qtdade for valida
+			console.log(e.path[0].getAttribute('data-args'));
+			//console.log(Polymer.dom(e).path[0].getAttribute('data-args').amount);
+			if(this.items_in_cart[e.model.item.id] == null && e.model.amount > 0) {
+				//coloco no carrinho
+				this.items_in_cart[e.model.item.id] = e.model.amount;
+				let item = JSON.stringify(e.model.item);
+				console.log(item);
+				//retorno o item
+				return item;
+			}
+			else {
+				if(this.items_in_cart[e.model.item.id] > 0)
+					alert("Esse item já está no carrinho!")
+				if(isNaN(e.model.amount) || e.model.amount <= 0)
+					alert("Insira uma quantidade válida!");
+			}
+		}
+	}
 	window.customElements.define(CompraProduto.is, CompraProduto);
 	</script>
 </dom-module>

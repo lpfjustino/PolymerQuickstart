@@ -8,7 +8,11 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="cadastro-cliente">
@@ -83,9 +87,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				</p>
 			</div>
 
-			<button type="submit" class="btn btn-default">
-				Submit
-			</button>
+			<paper-button raised class="primary" on-tap="postRegister">Cadastrar</paper-button>
 			</form>
 		</div>
 		</div>
@@ -95,6 +97,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	<script>
 	class CadastroCliente extends Polymer.Element {
 		static get is() { return 'cadastro-cliente'; }
+
+		postRegister() {
+			this.$.registerLoginAjax.url = 'http://localhost:3001/users';
+			this._setReqBody();
+			this.$.registerLoginAjax.generateRequest();
+		}
+
+		_setReqBody() {
+			this.$.registerLoginAjax.body = this.formData;
+		}
+
+		handleUserResponse(event) {
+			var response = JSON.parse(event.detail.response);
+	
+			if (response.id_token) {
+				this.error = '';
+				this.storedUser = {
+					name: this.formData.username,
+					id_token: response.id_token,
+					access_token: response.access_token,
+					role: response.role,
+					loggedin: true
+				};
+
+				this.redirect();
+			}
+
+			// reset form data
+			this.formData = {};
+		}
+
+		handleUserError(event) {
+			this.error = event.detail.request.xhr.response;
+		}
 	}
 
 	window.customElements.define(CadastroCliente.is, CadastroCliente);
