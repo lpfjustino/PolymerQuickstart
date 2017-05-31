@@ -107,12 +107,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 						type: Object,
 						value: () => {
 							return {
-								username: '7',
-								password: '7',
-								fullname: '7',
-								address: '7',
-								phone: '7',
-								email: '7',
+								username: '',
+								password: '',
+								fullname: '',
+								address: '',
+								phone: '',
+								email: '',
 								pic : {},
 								role: 'user'
 							}
@@ -129,7 +129,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 		_setReqBody() {
 			this.$.registerAjax.body = this.formData;
-			console.log(this.formData)
 		}
 
 		handleUserResponse(event) {
@@ -162,7 +161,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		// de login é acessada.
 		redirect() {
 			if(this.storedUser) {
-				console.log(this.storedUser);
 				// Redirect user or admin to their own homescreen
 				if(this.storedUser.role == 'user')
 					this.set('route.path', '/homescreen-usuario');
