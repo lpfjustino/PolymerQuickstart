@@ -61,7 +61,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			value="{{storedUser}}"></iron-localstorage>
 
 		<iron-ajax
-			id="registerLoginAjax"
+			id="loginAjax"
 			method="post"
 			content-type="application/json"
 			handle-as="text"
@@ -126,19 +126,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}
 
 			_setReqBody() {
-				this.$.registerLoginAjax.body = this.formData;
+				this.$.loginAjax.body = this.formData;
 			}
 
 			postLogin() {
-				this.$.registerLoginAjax.url = 'http://localhost:3001/sessions/create';
+				this.$.loginAjax.url = 'http://localhost:3001/sessions/create';
 				this._setReqBody();
-				this.$.registerLoginAjax.generateRequest();
+				this.$.loginAjax.generateRequest();
 			}
 
 			//postRegister() {
-			//	this.$.registerLoginAjax.url = 'http://localhost:3001/users';
+			//	this.$.loginAjax.url = 'http://localhost:3001/users';
 			//	this._setReqBody();
-			//	this.$.registerLoginAjax.generateRequest();
+			//	this.$.loginAjax.generateRequest();
 			//}
 
 			signUp() {
