@@ -21,6 +21,10 @@ var users = [
 	}
 	];
 
+var products = [{}];
+
+var services = [{}];
+
 function createIdToken(user) {
 	return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*60*5 });
 }
@@ -49,16 +53,16 @@ function genJti() {
 }
 
 function getUserScheme(req) {
+	var id;
     var username;
     var type;
-    var userSearch = {};
-
     var fullname;
     var address;
     var phone;
     var email;
     var pic;
     var role;
+    var userSearch = {};
 
     // The POST contains a username and not an email
     if(req.body.username) {
@@ -73,6 +77,7 @@ function getUserScheme(req) {
         userSearch = { email: username };
     }
 
+    id = req.body.id;
     password = req.body.password;
     fullname = req.body.fullname;
     address = req.body.address;
@@ -82,16 +87,67 @@ function getUserScheme(req) {
     role = req.body.role;
 
     return {
+    	id: id,
         username: username,
         password: password,
         type: type,
-        userSearch: userSearch,
         fullname: fullname,
         address: address,
         phone: phone,
         email: email,
         pic: pic,
-        role: role
+        role: role,
+        userSearch: userSearch
+    }
+}
+
+function getProductScheme(req) {
+	var id;
+	var nome;
+	var descricao;
+	var qtd;
+	var imagem;
+	var productSearch = {}
+
+    id = req.body.id;
+	nome = req.body.nome;
+	descricao = req.body.descricao;
+	qtd = req.body.qtd;
+	imagem = req.body.imagem;
+	productSearch = { id: id };
+
+    return {
+        id: id,
+		nome: nome,
+		descricao: descricao,
+		qtd: qtd,
+		imagem: imagem,
+		productSearch: productSearch
+    }
+}
+
+function getServiceScheme(req) {
+	var id;
+	var nome;
+	var descricao;
+	var preco;
+	var imagem;
+	var serviceSearch = {}
+
+    id = req.body.id;
+	nome = req.body.nome;
+	descricao = req.body.descricao;
+	qtd = req.body.qtd;
+	imagem = req.body.imagem;
+	serviceSearch = { id: id };
+
+    return {
+        id: id,
+		nome: nome,
+		descricao: descricao,
+		qtd: qtd,
+		imagem: imagem,
+		serviceSearch: serviceSearch
     }
 }
 
@@ -106,15 +162,49 @@ app.post('/users', function(req, res) {
 	 return res.status(400).send("A user with that username already exists");
 	}
 
-	var profile = _.pick(req.body, userScheme.type, 'password', 'extra');
-	profile.id = _.max(users, 'id').id + 1;
-
-	users.push(profile);
+	userScheme.id = _.max(users, 'id').id + 1;
+	console.log(users)
+	users.push(userScheme);
+	console.log(users)
 
 	res.status(201).send({
-		id_token: createIdToken(profile),
+		id_token: createIdToken(userScheme),
 		access_token: createAccessToken(),
         role: req.body.role
+	});
+});
+
+app.post('/register-product', function(req, res) {
+    var productScheme = getProductScheme(req);
+
+	if (_.find(products, productScheme.productSearch)) {
+	 return res.status(400).send("A product with that id already exists");
+	}
+
+	productScheme.id = _.max(products, 'id').id + 1;
+
+	products.push(productScheme);
+
+	res.status(201).send({
+		id_token: createIdToken(productScheme),
+		access_token: createAccessToken(),
+	});
+});
+
+app.post('/register-service', function(req, res) {
+    var serviceScheme = getServiceScheme(req);
+
+	if (_.find(services, serviceScheme.serviceSearch)) {
+	 return res.status(400).send("A service with that id already exists");
+	}
+
+	serviceScheme.id = _.max(services, 'id').id + 1;
+
+	services.push(serviceScheme);
+
+	res.status(201).send({
+		id_token: createIdToken(serviceScheme),
+		access_token: createAccessToken(),
 	});
 });
 
