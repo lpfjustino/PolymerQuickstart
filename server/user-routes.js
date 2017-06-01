@@ -26,11 +26,15 @@ var products = [
 		{id:2, nome:'produto2'},
 	];
 
-var services = [{
-		{id:1}
-	}];
+var services = [
+		{id:1, nome:'servico1'},
+		{id:2, nome:'servico2'}
+	];
 
-var pets = [{}];
+var pets = [
+		{id:1, nome:'pet1'},
+		{id:2, nome:'pet2'}
+	];
 
 function createIdToken(user) {
 	return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*60*5 });
@@ -190,9 +194,7 @@ app.post('/register-user', function(req, res) {
 	}
 
 	userScheme.id = _.max(users, 'id').id + 1;
-	console.log(users)
 	users.push(userScheme);
-	console.log(users)
 
 	res.status(201).send({
 		id_token: createIdToken(userScheme),
@@ -321,9 +323,9 @@ app.get('/services', function(req,res) {
 
 app.get('/services/:id', function(req,res) {
 	var id = parseInt(req.params.id);
-	var product = _.filter(services, {'id': id})
+	var service = _.filter(services, {'id': id})
 	res.status(201).send({
-		product: product
+		service: service
 	});
 });
 
