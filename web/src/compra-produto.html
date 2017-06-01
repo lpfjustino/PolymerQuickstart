@@ -34,7 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	</style>
 	
 	
-		<iron-ajax auto url="../products.json" handle-as="json" last-response="{{ajaxResponse}}"></iron-ajax>
+		<iron-ajax auto url="http://127.0.0.1:3001/products" handle-as="json" last-response="{{ajaxResponse}}"></iron-ajax>
 			<div id="pcId" layout horizontal wrap>
 		    <template is="dom-repeat" items="[[ajaxResponse]]" index-as="i">
 		    
