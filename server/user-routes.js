@@ -21,9 +21,14 @@ var users = [
 	}
 	];
 
-var products = [{}];
+var products = [
+		{id:1, nome:'produto1'},
+		{id:2, nome:'produto2'},
+	];
 
-var services = [{}];
+var services = [{
+		{id:1}
+	}];
 
 var pets = [{}];
 
@@ -173,7 +178,7 @@ function getPetScheme(req) {
 
 }
 
-app.post('/users', function(req, res) {
+app.post('/register-user', function(req, res) {
     var userScheme = getUserScheme(req);
 
 	if (!userScheme.username || !req.body.password) {
@@ -222,10 +227,10 @@ app.post('/register-service', function(req, res) {
     var serviceScheme = getServiceScheme(req);
 
     // Ensures that no ID will be NaN
-    if(_.max(products, 'id') != undefined)
-		petScheme.id = _.max(pets, 'id').id + 1;
+    if(_.max(services, 'id') != undefined)
+		serviceScheme.id = _.max(services, 'id').id + 1;
 	else
-		petScheme.id = 0;
+		serviceScheme.id = 0;
 
 	serviceScheme.id = _.max(services, 'id').id + 1;
 
@@ -261,7 +266,7 @@ app.post('/sessions/create', function(req, res) {
 	});
 });
 
-app.post('/register-pet') {
+app.post('/register-pet', function(req, res) {
 	var petScheme = getPetScheme(req);
 
 	// Ensures that no ID will be NaN
@@ -278,5 +283,60 @@ app.post('/register-pet') {
 		id_token: createIdToken(petScheme),
 		access_token: createAccessToken(),
 	});
-}
+});
 
+app.get('/products', function(req,res) {
+	res.status(201).send({
+		products: products
+	});
+});
+
+app.get('/products/:id', function(req,res) {
+	var id = parseInt(req.params.id);
+	var product = _.filter(products, {'id': id})
+	res.status(201).send({
+		product: product
+	});
+});
+
+app.get('/pets', function(req,res) {
+	res.status(201).send({
+		pets: pets
+	});
+});
+
+app.get('/pets/:id', function(req,res) {
+	var id = parseInt(req.params.id);
+	var product = _.filter(pets, {'id': id})
+	res.status(201).send({
+		product: product
+	});
+});
+
+app.get('/services', function(req,res) {
+	res.status(201).send({
+		services: services
+	});
+});
+
+app.get('/services/:id', function(req,res) {
+	var id = parseInt(req.params.id);
+	var product = _.filter(services, {'id': id})
+	res.status(201).send({
+		product: product
+	});
+});
+
+app.get('/users', function(req,res) {
+	res.status(201).send({
+		users: users
+	});
+});
+
+app.get('/users/:id', function(req,res) {
+	var id = parseInt(req.params.id);
+	var user = _.filter(users, {'id': id})
+	res.status(201).send({
+		user: user
+	});
+});
