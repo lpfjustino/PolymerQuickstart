@@ -25,6 +25,8 @@ var products = [{}];
 
 var services = [{}];
 
+var pets = [{}];
+
 function createIdToken(user) {
 	return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*60*5 });
 }
@@ -151,6 +153,26 @@ function getServiceScheme(req) {
     }
 }
 
+function getPetScheme(req) {
+	var name;
+	var breed;
+	var age;
+	var pic;
+
+	name = req.body.name;
+	breed = req.body.breed;
+	age = req.body.age;
+	pic = req.body.pic;
+
+	return {
+		name: name,
+		breed: breed,
+		age: age,
+		pic: pic
+	}
+
+}
+
 app.post('/users', function(req, res) {
     var userScheme = getUserScheme(req);
 
@@ -181,7 +203,12 @@ app.post('/register-product', function(req, res) {
 	 return res.status(400).send("A product with that id already exists");
 	}
 
-	productScheme.id = _.max(products, 'id').id + 1;
+	// Ensures that no ID will be NaN
+	if(_.max(products, 'id') != undefined)
+		productScheme.id = _.max(products, 'id').id + 1;
+	else
+		productScheme.id = 0;
+
 
 	products.push(productScheme);
 
@@ -194,9 +221,11 @@ app.post('/register-product', function(req, res) {
 app.post('/register-service', function(req, res) {
     var serviceScheme = getServiceScheme(req);
 
-	if (_.find(services, serviceScheme.serviceSearch)) {
-	 return res.status(400).send("A service with that id already exists");
-	}
+    // Ensures that no ID will be NaN
+    if(_.max(products, 'id') != undefined)
+		petScheme.id = _.max(pets, 'id').id + 1;
+	else
+		petScheme.id = 0;
 
 	serviceScheme.id = _.max(services, 'id').id + 1;
 
@@ -231,4 +260,23 @@ app.post('/sessions/create', function(req, res) {
 		role: user.role
 	});
 });
+
+app.post('/register-pet') {
+	var petScheme = getPetScheme(req);
+
+	// Ensures that no ID will be NaN
+	if(_.max(products, 'id') != undefined)
+		petScheme.id = _.max(pets, 'id').id + 1;
+	else
+		petScheme.id = 0;
+
+	petScheme.id = _.max(pets, 'id').id + 1;
+
+	pets.push(petScheme);
+
+	res.status(201).send({
+		id_token: createIdToken(petScheme),
+		access_token: createAccessToken(),
+	});
+}
 
