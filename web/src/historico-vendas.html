@@ -1,0 +1,66 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="historico-vendas">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+    <iron-ajax auto url="../payments/product" handle-as="json" last-response="{{ajaxResponse}}"></iron-ajax>
+    <iron-ajax auto url="../payments/service" handle-as="json" last-response="{{ajaxResponse2}}"></iron-ajax>
+
+    <h1>Histórico de Vendas</h1>
+
+    <div class="card">
+      <h2>Vendas de produtos</h2>
+      <table>
+      <th></th>
+      <template is="dom-repeat" items="[[ajaxResponse]]">
+        <tr>
+          <td>USUARIO</td>
+          <td>ITENS (LISTA COM CODIGO + NOME)</td>
+          <td>TOTAL GANHO</td>
+        </tr>
+      </template>
+      </table>
+    </div>
+
+    <div>
+      <h2>Vendas de serviços</h2>
+      <table>
+      <th></th>
+      <template is="dom-repeat" items="[[ajaxResponse2]]">
+        <tr>
+          <td>USUARIO</td>
+          <td>SERVIÇO</td>
+          <td>GASTO</td>
+        </tr>
+      </template>
+      </table>
+    </div>
+    
+  </template>
+
+  <script>
+    class HistoricoVendas extends Polymer.Element {
+      static get is() { return 'historico-vendas'; }
+    }
+
+    window.customElements.define(HistoricoVendas.is, HistoricoVendas);
+  </script>
+</dom-module>

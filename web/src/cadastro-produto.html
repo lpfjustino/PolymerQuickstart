@@ -1,0 +1,88 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="cadastro-produto">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+      paper-button.link {
+        color: #757575;
+      }
+    </style>
+
+    <iron-ajax
+      id="registerAjax"
+      method="post"
+      content-type="application/json"
+      handle-as="text"
+      on-error="handleUserError"></iron-ajax>
+
+    <div class="card">
+      <h1>Register new product.</h1>
+
+      <paper-input label="Nome" value="{{formData.nome}}"></paper-input>
+      <paper-input label="Descrição" value="{{formData.descricao}}"></paper-input>
+      <paper-input label="Quantidade" value="{{formData.qtd}}"></paper-input>
+      <paper-input label="Foto" id="input_pic" type="file" on-change="_handleFiles"></paper-input>
+
+      <paper-button raised class="primary" on-tap="registerProduct">Register</paper-button>
+      
+      
+    </div>
+
+  </template>
+
+  <script>
+    class CadastroProduto extends Polymer.Element {
+      static get is() { return 'cadastro-produto'; }
+
+      static get properties() {
+        return {
+          error: String,
+          formData: {
+            type: Object,
+            value: () => { return { nome: 'dsd', descricao:'dsd', qtd: '2', imagem: {} } }
+          },
+        }
+      }
+
+      registerProduct(){
+        this.$.registerAjax.url = 'http://localhost:3001/register-product';
+        console.log(this.formData);
+        this.$.registerAjax.body = this.formData;
+        this.$.registerAjax.generateRequest();
+      }
+      _handleFiles() {
+        this.formData.pic = this.$.input_pic.inputElement.inputElement.files[0];
+      }
+
+      handleUserError(event) {
+        this.error = event.detail.request.xhr.response;
+        console.log(this.error);
+      }
+    }
+
+    window.customElements.define(CadastroProduto.is, CadastroProduto);
+  </script>
+</dom-module>

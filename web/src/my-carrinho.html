@@ -1,0 +1,99 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-carrinho">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+    <app-location route="{{route}}"></app-location>
+    <iron-localstorage
+        id="cartStr"
+        name="cart-storage"
+        value="{{string_cart}}"
+        on-iron-localstorage-load="initializeCart">
+        </iron-localstorage>
+
+    <h1>Seu Carrinho</h1>
+    <div class="card">
+      
+      <table>
+        <th></th>
+        <template is="dom-repeat" items="{{cart2}}">
+          <tr>
+            <td>{{item.nome_produto}}</td>
+            <td>{{item.preco}}</td>
+            <td>{{item.quantidade_no_carrinho}}</td>
+            
+            <td><paper-button on-tap="removeItem" id="{{item.id}}">Excluir</paper-button></td>
+          </tr> 
+        </template>
+        <tr>
+          <td colspan="3"><paper-button on-tap="continueShopping">Continuar Comprando</paper-button></td>
+          <td><span>TOTAL</span></td>
+          <td><paper-button on-tap="finishOrder">Finalizar Compra</paper-button></td>
+        </tr>
+      </table>
+      
+    </div>
+    
+  </template>
+
+  <script>
+    class MyCarrinho extends Polymer.Element {
+      static get is() { return 'my-carrinho'; }
+
+      static get properties() {
+      return {
+        string_cart: {
+          type: String,
+          notify: true
+        },
+        cart: {
+          type: Array,
+          notify: true
+        },
+        cart2: Array
+      };
+      }
+
+      initializeCart(){
+        let cart = JSON.parse(this.string_cart);
+        this.set('cart2', cart);
+        console.log(JSON.stringify(cart));
+      }
+
+      removeItem(id){
+        this.cart.pop();
+      }
+
+      continueShopping(){
+        this.set('route.path', '/compra-produto');
+      }
+
+      finishOrder(){
+        this.set('route.path', '/my-payment');
+      }
+    }
+    window.customElements.define(MyCarrinho.is, MyCarrinho);
+  </script>
+</dom-module>

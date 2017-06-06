@@ -1,0 +1,26 @@
+[
+	{
+		"id": 1,
+		"img_produto":"http://www.zolux.com/118394-large_default/soho-pet-carrier-black.jpg",
+		"nome_produto":"Bolsa transportadora", 
+		"descricao": "Com essa bolsa, voce podera transportar seu cachorro de pequeno porte facilmente em viagens.",
+		"preco":160
+	},
+
+	{	
+		"id": 2,
+		"img_produto":"http://www.zolux.com/136770-large_default/bella-club-pet-beds-pink.jpg",
+		"nome_produto":"Conjunto de camas rosa",
+		"descricao":"Conjunto de camas. Contem 3 camas com 3 tamanhos distintos: grande, medio e pequeno.",
+		"preco":300
+	},
+
+	{
+		"id": 3,
+		"img_produto":"http://www.zolux.com/136766-large_default/bella-club-pet-beds-grey.jpg",
+		"nome_produto":"Conjunto de camas cinza",
+		"descricao":"Conjunto de camas. Contem 3 camas com 3 tamanhos distintos: grande, medio e pequeno.",
+		"preco":290
+	}
+
+]

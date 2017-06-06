@@ -21,20 +21,13 @@ var users = [
 	}
 	];
 
-var products = [
-		{id:1, nome_produto:'produto1', preco: 20, descricao:'desc', img_produto: ''},
-		{id:2, nome_produto:'produto2', preco: 30, descricao:'desc', img_produto: ''},
-	];
+var products = [{}];
 
-var services = [
-		{id:1, nome:'servico1'},
-		{id:2, nome:'servico2'}
-	];
+var services = [{}];
 
-var pets = [
-		{id:1, nome:'pet1'},
-		{id:2, nome:'pet2'}
-	];
+var pets = [{}];
+
+var payments = [{}];
 
 function createIdToken(user) {
 	return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*60*5 });
@@ -182,7 +175,28 @@ function getPetScheme(req) {
 
 }
 
-app.post('/register-user', function(req, res) {
+function getPaymentScheme(req) {
+	var user;
+	var items;
+	var total;
+	var type;
+
+
+	user = req.body.user;
+	items = req.body.items;
+	total = req.body.total;
+	type = req.body.type;
+
+	return {
+		user: user,
+		items: items,
+		total: total,
+		type: type
+	}
+
+}
+
+app.post('/users', function(req, res) {
     var userScheme = getUserScheme(req);
 
 	if (!userScheme.username || !req.body.password) {
@@ -194,7 +208,9 @@ app.post('/register-user', function(req, res) {
 	}
 
 	userScheme.id = _.max(users, 'id').id + 1;
+	console.log(users)
 	users.push(userScheme);
+	console.log(users)
 
 	res.status(201).send({
 		id_token: createIdToken(userScheme),
@@ -287,42 +303,27 @@ app.post('/register-pet', function(req, res) {
 	});
 });
 
-app.get('/products', function(req,res) {
-	res.status(201).send(products);
+app.post('/register-payment', function(req, res) {
+	var paymentScheme = getPetScheme(req);
+
+	// Ensures that no ID will be NaN
+	if(_.max(payments, 'id') != undefined)
+		paymentScheme.id = _.max(payments, 'id').id + 1;
+	else
+		paymentScheme.id = 0;
+
+	paymentScheme.id = _.max(payments, 'id').id + 1;
+
+	payments.push(paymentScheme);
+
+	res.status(201).send({
+		id_token: createIdToken(paymentScheme),
+		access_token: createAccessToken(),
+	});
 });
 
-app.get('/products/:id', function(req,res) {
-	var id = parseInt(req.params.id);
-	var product = _.filter(products, {'id': id})
-	res.status(201).send(product);
-});
-
-app.get('/pets', function(req,res) {
-	res.status(201).send(pets);
-});
-
-app.get('/pets/:id', function(req,res) {
-	var id = parseInt(req.params.id);
-	var product = _.filter(pets, {'id': id})
-	res.status(201).send(product);
-});
-
-app.get('/services', function(req,res) {
-	res.status(201).send(services);
-});
-
-app.get('/services/:id', function(req,res) {
-	var id = parseInt(req.params.id);
-	var service = _.filter(services, {'id': id})
-	res.status(201).send(service);
-});
-
-app.get('/users', function(req,res) {
-	res.status(201).send(users);
-});
-
-app.get('/users/:id', function(req,res) {
-	var id = parseInt(req.params.id);
-	var user = _.filter(users, {'id': id})
-	res.status(201).send(user);
+app.get('/payments/:type', function(req,res) {
+	var type = req.params.type;
+	var payment = _.filter(payments, {'type': type})
+	res.status(201).send(payment);
 });

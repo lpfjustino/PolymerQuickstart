@@ -8,172 +8,93 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/app-route/app-location.html">
-<link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/app-route/app-location.html">
-<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
-<link rel="import" href="../bower_components/file-input/file-input.html">
-
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="cadastro-cliente">
 	<template>
 	<style include="shared-styles">
 		:host {
-				display: block;
+		display: block;
 
-				padding: 10px;
-			}
-
-			.wrapper-btns {
-				margin-top: 15px;
-			}
-
-			paper-button.link {
-				color: #757575;
-			}
-
-			.alert-error {
-				background: #ffcdd2;
-				border: 1px solid #f44336;
-				border-radius: 3px;
-				color: #333;
-				font-size: 14px;
-				padding: 10px;
-			}
-
-			#login-container {
-				width: 80%;
-				margin: 0 auto;
-			}
+		padding: 10px;
+		}
 	</style>
 
-	<iron-ajax
-			id="registerAjax"
-			method="post"
-			content-type="application/json"
-			handle-as="text"
-			on-response="handleUserResponse"
-			on-error="handleUserError"></iron-ajax>
-
-	<app-data key="userData" data="{{storedUser}}"></app-data>
-		<iron-localstorage
-			name="user-storage"
-			on-iron-localstorage-load="redirect"
-			value="{{storedUser}}"></iron-localstorage>
-
-	<app-location route="{{route}}"></app-location>
-
-	<div class="card" id="register-container">
+	<div class="container-fluid">
+		<div class="row">
+		<div class="col-md-12">
 			<h3>
 			Novo Cliente
 			</h3>
 			<p>
 			Insira as informações do novo cliente a ser cadastrado.
 			</p>
+			<form role="form">
 
-			<template is="dom-if" if="[[error]]">
-	 			<p class="alert-error"><strong>Erro:</strong> [[error]]</p>
-			</template>
+			<!-- ID -->
+			<div class="form-group">
+				<label for="input_name">
+				Código do cliente
+				</label>
+				<input type="text" class="form-control" id="input_id"/>
+			</div>
+			
+			<!-- Nome -->
+			<div class="form-group">
+				<label for="input_name">
+				Nome Completo
+				</label>
+				<input type="text" class="form-control" id="input_name" />
+			</div>
 
-				<paper-input label="Nome de Usuário" id="input_id" value={{formData.username}}></paper-input>
-				<paper-input label="Senha" id="input_password" value={{formData.password}}></paper-input>
-				<paper-input label="Nome Completo" id="input_fullname" value={{formData.fullname}}></paper-input>
-				<paper-input label="Endereço" id="input_address" value={{formData.address}}></paper-input>
-				<paper-input label="Telefone" id="input_phone" value={{formData.phone}}></paper-input>
-				<paper-input label="Email" id="input_email" value={{formData.email}}></paper-input>
-				<paper-input label="Foto" id="input_pic" type="file" on-change="_handleFiles"></paper-input>
+			<!-- Endereço -->
+			<div class="form-group">
+				<label for="input_address">
+				Endereço
+				</label>
+				<input type="text" class="form-control" id="input_address" />
+			</div>
+
+			<!-- Telefone -->
+			<div class="form-group">
+				<label for="input_phone">
+				Telefone
+				</label>
+				<input type="text" class="form-control" id="input_phone" />
+			</div>
+
+			<!-- Email -->
+			<div class="form-group">
+				<label for="input_email">
+				Email
+				</label>
+				<input type="text" class="form-control" id="input_email" />
+			</div>
+			
+			<!-- Foto -->
+			<div class="form-group">
+				<label for="input_photo">
+				Foto
+				</label>
+				<input type="file" id="input_photo" />
+				<p class="help-block">
+				Insira aqui a foto do cliente.
 				</p>
+			</div>
 
-			<paper-button raised class="primary" on-tap="postRegister">Cadastrar</paper-button>
+			<button type="submit" class="btn btn-default">
+				Submit
+			</button>
+			</form>
+		</div>
+		</div>
 	</div>
 	</template>
 
 	<script>
 	class CadastroCliente extends Polymer.Element {
 		static get is() { return 'cadastro-cliente'; }
-
-		static get properties() {
-				return {
-					storedUser: {
-						type: Object,
-						notify: true
-					},
-					error: String,
-					formData: {
-						type: Object,
-						value: () => {
-							return {
-								username: '',
-								password: '',
-								fullname: '',
-								address: '',
-								phone: '',
-								email: '',
-								pic : {},
-								role: 'user'
-							}
-						}
-					},
-				}
-			}
-
-		postRegister() {
-			this.$.registerAjax.url = 'http://localhost:3001/register-user';
-			this._setReqBody();
-			this.$.registerAjax.generateRequest();
-		}
-
-		_setReqBody() {
-			this.$.registerAjax.body = this.formData;
-		}
-
-		handleUserResponse(event) {
-			var response = JSON.parse(event.detail.response);
-	
-			if (response.id_token) {
-				this.error = '';
-				this.storedUser = {
-					name: this.formData.username,
-					id_token: response.id_token,
-					access_token: response.access_token,
-					role: response.role,
-					loggedin: true
-				};
-
-				this.redirect();
-			}
-
-			// reset form data
-			this.formData = {};
-		}
-
-		handleUserError(event) {
-			this.error = event.detail.request.xhr.response;
-		}
-
-		// TODO: Corrigir o bug em que o redirecionamento só acontece
-		// no momento do login ou no momento que a página é acessada
-		// pela primeira vez, mas não nas próximas vezes que a página
-		// de login é acessada.
-		redirect() {
-			if(this.storedUser) {
-				// Redirect user or admin to their own homescreen
-				if(this.storedUser.role == 'user')
-					this.set('route.path', '/homescreen-usuario');
-				else if(this.storedUser.role == 'admin')
-					this.set('route.path', '/homescreen-admin');
-				else
-					this.set('route.path', '/my-view404');
-			}
-		}
-
-		_handleFiles() {
-			this.formData.pic = this.$.input_pic.inputElement.inputElement.files[0];
-		}
 	}
 
 	window.customElements.define(CadastroCliente.is, CadastroCliente);

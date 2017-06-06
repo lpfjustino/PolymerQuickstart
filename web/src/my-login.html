@@ -61,7 +61,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			value="{{storedUser}}"></iron-localstorage>
 
 		<iron-ajax
-			id="loginAjax"
+			id="registerLoginAjax"
 			method="post"
 			content-type="application/json"
 			handle-as="text"
@@ -83,8 +83,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				<paper-input label="Password" value={{formData.password}}></paper-input>
 
 				<div class="wrapper-btns">
-					<paper-button raised class="primary" on-tap="postLogin">Entrar</paper-button>
-					<paper-button class="link" on-tap="signUp">Cadastrar</paper-button>
+					<paper-button raised class="primary" on-tap="postLogin">Log In</paper-button>
+					<paper-button class="link" on-tap="postRegister">Sign Up</paper-button>
 				</div>
 			</div>
 		</div>
@@ -126,23 +126,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}
 
 			_setReqBody() {
-				this.$.loginAjax.body = this.formData;
+				this.$.registerLoginAjax.body = this.formData;
 			}
 
 			postLogin() {
-				this.$.loginAjax.url = 'http://localhost:3001/sessions/create';
+				this.$.registerLoginAjax.url = 'http://localhost:3001/sessions/create';
 				this._setReqBody();
-				this.$.loginAjax.generateRequest();
+				this.$.registerLoginAjax.generateRequest();
 			}
 
-			//postRegister() {
-			//	this.$.loginAjax.url = 'http://localhost:3001/users';
-			//	this._setReqBody();
-			//	this.$.loginAjax.generateRequest();
-			//}
-
-			signUp() {
-				this.set('route.path', '/cadastro-cliente')
+			postRegister() {
+				this.$.registerLoginAjax.url = 'http://localhost:3001/users';
+				this._setReqBody();
+				this.$.registerLoginAjax.generateRequest();
 			}
 
 			handleUserResponse(event) {
