@@ -77,7 +77,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	
 		<iron-localstorage
 				name="cart-storage"
-				iron-localstorage-load-empty="initializeDefault"	
+				iron-localstorage-load-empty="initializeDefault"
+				on-iron-localstorage-load="initializeCart"
 				value="{{cart}}">
 				</iron-localstorage>
 
@@ -212,6 +213,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		proceed_To_Cart() {
 			this.set('cart', JSON.stringify(this.cart_aux));
 			this.set('route.path', '/my-carrinho');
+		}
+
+		initializeCart() {
+			let inst_cart = JSON.parse(this.cart);
+        	this.set('cart_aux', inst_cart);
 		}
 	}
 	window.customElements.define(CompraProduto.is, CompraProduto);
