@@ -1,4 +1,4 @@
-var logger          = require('morgan'),
+let logger          = require('morgan'),
     cors            = require('cors'),
     http            = require('http'),
     express         = require('express'),
@@ -6,7 +6,7 @@ var logger          = require('morgan'),
     dotenv          = require('dotenv'),
     bodyParser      = require('body-parser');
 
-var app = express();
+let app = express();
 
 dotenv.load();
 
@@ -35,7 +35,7 @@ app.use(require('./anonymous-routes'));
 app.use(require('./protected-routes'));
 app.use(require('./user-routes'));
 
-var port = process.env.PORT || 3001;
+let port = process.env.PORT || 3001;
 
 http.createServer(app).listen(port, function (err) {
   console.log('listening in http://localhost:' + port);

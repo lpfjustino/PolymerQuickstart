@@ -142,7 +142,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}
 
 			handleUserResponse(event) {
-				var response = JSON.parse(event.detail.response);
+				let response = JSON.parse(event.detail.response);
 
 				if (response.id_token) {
 					this.error = '';

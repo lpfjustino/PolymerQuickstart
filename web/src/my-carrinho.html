@@ -91,9 +91,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       setForm(e){
-        var response = e.detail.response;
-        var string_items = '';
-        var total_items = 0;
+        let response = e.detail.response;
+        let string_items = '';
+        let total_items = 0;
 
         response.forEach((product) => {
           string_items += product.nome_produto + "; ";

@@ -1,12 +1,12 @@
-var express = require('express'),
+let express = require('express'),
 		_			 = require('lodash'),
 		config	= require('./config'),
 		jwt		 = require('jsonwebtoken');
 
-var app = module.exports = express.Router();
+let app = module.exports = express.Router();
 
 // XXX: This should be a database of users :).
-var users = [
+let users = [
 	{
 		id: 1,
 		username: 'admin',
@@ -21,16 +21,16 @@ var users = [
 	}
 	];
 
-var products = [{}];
+let products = [{}];
 
-var services = [{}];
+let services = [{}];
 
-var pets = [{}];
+let pets = [{}];
 
-var payments = [{}];
+let payments = [{}];
 
-var carts = [{"id":1,"img_produto":"http://www.zolux.com/118394-large_default/soho-pet-carrier-black.jpg","nome_produto":"Bolsatransportadora","descricao":"Com essa bolsa, voce podera transportar seu cachorro de pequeno porte facilmente em viagens.","preco":160,"quantidade_no_carrinho":2,"total_item":320}]
-var schedules = [{}];
+let carts = [{"id":1,"img_produto":"http://www.zolux.com/118394-large_default/soho-pet-carrier-black.jpg","nome_produto":"Bolsatransportadora","descricao":"Com essa bolsa, voce podera transportar seu cachorro de pequeno porte facilmente em viagens.","preco":160,"quantidade_no_carrinho":2,"total_item":320}]
+let schedules = [{}];
 
 function createIdToken(user) {
 	return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*60*5 });
@@ -60,16 +60,16 @@ function genJti() {
 }
 
 function getUserScheme(req) {
-	var id;
-    var username;
-    var type;
-    var fullname;
-    var address;
-    var phone;
-    var email;
-    var pic;
-    var role;
-    var userSearch = {};
+	let id;
+    let username;
+    let type;
+    let fullname;
+    let address;
+    let phone;
+    let email;
+    let pic;
+    let role;
+    let userSearch = {};
 
     // The POST contains a username and not an email
     if(req.body.username) {
@@ -109,12 +109,12 @@ function getUserScheme(req) {
 }
 
 function getProductScheme(req) {
-	var id;
-	var nome;
-	var descricao;
-	var qtd;
-	var imagem;
-	var productSearch = {}
+	let id;
+	let nome;
+	let descricao;
+	let qtd;
+	let imagem;
+	let productSearch = {}
 
     id = req.body.id;
 	nome = req.body.nome;
@@ -134,12 +134,12 @@ function getProductScheme(req) {
 }
 
 function getServiceScheme(req) {
-	var id;
-	var nome;
-	var descricao;
-	var preco;
-	var imagem;
-	var serviceSearch = {}
+	let id;
+	let nome;
+	let descricao;
+	let preco;
+	let imagem;
+	let serviceSearch = {}
 
     id = req.body.id;
 	nome = req.body.nome;
@@ -159,10 +159,10 @@ function getServiceScheme(req) {
 }
 
 function getPetScheme(req) {
-	var name;
-	var breed;
-	var age;
-	var pic;
+	let name;
+	let breed;
+	let age;
+	let pic;
 
 	name = req.body.name;
 	breed = req.body.breed;
@@ -179,10 +179,10 @@ function getPetScheme(req) {
 }
 
 function getPaymentScheme(req) {
-	var user;
-	var items;
-	var total;
-	var type;
+	let user;
+	let items;
+	let total;
+	let type;
 
 
 	user = req.body.user;
@@ -200,13 +200,13 @@ function getPaymentScheme(req) {
 }
 
 function getCartScheme(product) {
-	var id;
-    var img_produto;
-    var nome_produto;
-    var descricao;
-    var preco;
-    var quantidade_no_carrinho;
-    var total_item;
+	let id;
+    let img_produto;
+    let nome_produto;
+    let descricao;
+    let preco;
+    let quantidade_no_carrinho;
+    let total_item;
 
     id = product.id;
 	img_produto = product.img_produto;
@@ -229,9 +229,9 @@ function getCartScheme(product) {
 }
 
 function getScheduleScheme(req) {
-	var servico;
-    var data;
-    var horario;
+	let servico;
+    let data;
+    let horario;
 
     servico = req.servico;
 	data = req.data;
@@ -246,7 +246,7 @@ function getScheduleScheme(req) {
 }
 
 app.post('/users', function(req, res) {
-    var userScheme = getUserScheme(req);
+    let userScheme = getUserScheme(req);
 
 	if (!userScheme.username || !req.body.password) {
 		return res.status(400).send("You must send the username and the password");
@@ -269,7 +269,7 @@ app.post('/users', function(req, res) {
 });
 
 app.post('/register-product', function(req, res) {
-    var productScheme = getProductScheme(req);
+    let productScheme = getProductScheme(req);
 
 	// Ensures that no ID will be NaN
 	if(_.max(products, 'id') != undefined)
@@ -287,7 +287,7 @@ app.post('/register-product', function(req, res) {
 });
 
 app.post('/register-service', function(req, res) {
-    var serviceScheme = getServiceScheme(req);
+    let serviceScheme = getServiceScheme(req);
 
     // Ensures that no ID will be NaN
     if(_.max(services, 'id') != undefined)
@@ -304,13 +304,13 @@ app.post('/register-service', function(req, res) {
 });
 
 app.post('/sessions/create', function(req, res) {
-	var userScheme = getUserScheme(req);
+	let userScheme = getUserScheme(req);
 
 	if (!userScheme.username || !req.body.password) {
 		return res.status(400).send("You must send the username and the password");
 	}
 
-	var user = _.find(users, userScheme.userSearch);
+	let user = _.find(users, userScheme.userSearch);
 	
 	if (!user) {
 		return res.status(401).send("The username or password don't match");
@@ -328,7 +328,7 @@ app.post('/sessions/create', function(req, res) {
 });
 
 app.post('/register-pet', function(req, res) {
-	var petScheme = getPetScheme(req);
+	let petScheme = getPetScheme(req);
 
 	// Ensures that no ID will be NaN
 	if(_.max(pets, 'id') != undefined)
@@ -345,7 +345,7 @@ app.post('/register-pet', function(req, res) {
 });
 
 app.post('/register-payment', function(req, res) {
-	var paymentScheme = getPaymentScheme(req);
+	let paymentScheme = getPaymentScheme(req);
 
 	// Ensures that no ID will be NaN
 	if(_.max(payments, 'id') != undefined)
@@ -363,9 +363,9 @@ app.post('/register-payment', function(req, res) {
 
 
 app.post('/submit-cart', function(req, res) {
-	var cart = [];
+	let cart = [];
 	req.body.forEach((product) => {
-		var productScheme = getCartScheme(product);
+		let productScheme = getCartScheme(product);
 		cart.push(productScheme);
 	});
 	console.log(cart);
@@ -379,7 +379,7 @@ app.post('/submit-cart', function(req, res) {
 
 
 app.post('/new-schedule', function(req, res) {
-	var scheduleScheme = getScheduleScheme(req);
+	let scheduleScheme = getScheduleScheme(req);
 
 	// Ensures that no ID will be NaN
 	if(_.max(schedules, 'id') != undefined)

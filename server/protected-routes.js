@@ -1,12 +1,12 @@
-var express = require('express'),
+let express = require('express'),
     jwt     = require('express-jwt'),
     config  = require('./config'),
     quoter  = require('./quoter');
 
-var app = module.exports = express.Router();
+let app = module.exports = express.Router();
 
 // Validate access_token
-var jwtCheck = jwt({
+let jwtCheck = jwt({
   secret: config.secret,
   audience: config.audience,
   issuer: config.issuer
@@ -15,7 +15,7 @@ var jwtCheck = jwt({
 // Check for scope
 function requireScope(scope) {
   return function (req, res, next) {
-    var has_scopes = req.user.scope === scope;
+    let has_scopes = req.user.scope === scope;
     if (!has_scopes) { 
         res.sendStatus(401); 
         return;

@@ -91,12 +91,12 @@ against the browsers currently installed on your machine:
 
     polymer test
 
-If running Windows you will need to set the following environment variables:
+If running Windows you will need to set the following environment letiables:
 
 - LAUNCHPAD_BROWSERS
 - LAUNCHPAD_CHROME
 
-Read More here [daffl/launchpad](https://github.com/daffl/launchpad#environment-variables-impacting-local-browsers-detection)
+Read More here [daffl/launchpad](https://github.com/daffl/launchpad#environment-letiables-impacting-local-browsers-detection)
 
 ### Adding a new view
 
