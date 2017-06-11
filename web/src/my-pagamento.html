@@ -16,6 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="my-pagamento">
@@ -29,19 +30,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-location route="{{route}}"></app-location>
 
-    <iron-localstorage
-        name="payment-storage"
-        value="{{payment}}">
-        </iron-localstorage>
-
     <iron-ajax
       id="registerAjax"
       method="post"
       content-type="application/json"
       handle-as="text"></iron-ajax>
 
+    <iron-localstorage
+      id="ps"
+      name="payment-storage"
+      value="{{fromCart}}"
+      on-iron-localstorage-load="setPayment"></iron-localstorage>
+
     <div class="card">
-    	<paper-input label="Nome do titular" ></paper-input>
+    	<paper-input label="Nome do titular" value="{{formData.user}}"></paper-input>
       	<paper-input label="Número do cartão"></paper-input>
       	<div>Expiração</div>
       	<div>
@@ -88,19 +90,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		static get properties() {
         return {
           error: String,
+          fromCart: {
+            type: Object,
+            value: () => { return { items:'', total: '', type: '' } },
+            notify: true
+          },
           formData: {
             type: Object,
-            value: () => { return { user: '', items:'', total: '', type: '' } }
-          },
+            value: () => {return { user: '', items: '', total: '', type: ''}}
+          }
         }
       	}
+
+        setPayment(){
+          this.formData.items = this.fromCart.items;
+          this.formData.total = this.fromCart.total;
+          this.formData.type = this.fromCart.type;
+        }
 
         pay() {
         	this.$.registerAjax.url = 'http://localhost:3001/register-payment';
         	this.$.registerAjax.body = this.formData;
+          console.log(this.formData);
         	this.$.registerAjax.generateRequest();
-            alert('Compra efetuada com sucesso.');
-            this.set('route.path', '/homescreen-usuario');
+          this.set('route.path', '/compra-produto');
         }
 	}
 	window.customElements.define(MyPagamento.is, MyPagamento);

@@ -29,6 +29,9 @@ var pets = [{}];
 
 var payments = [{}];
 
+var carts = [{"id":1,"img_produto":"http://www.zolux.com/118394-large_default/soho-pet-carrier-black.jpg","nome_produto":"Bolsatransportadora","descricao":"Com essa bolsa, voce podera transportar seu cachorro de pequeno porte facilmente em viagens.","preco":160,"quantidade_no_carrinho":2,"total_item":320}]
+var schedules = [{}];
+
 function createIdToken(user) {
 	return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*60*5 });
 }
@@ -196,6 +199,52 @@ function getPaymentScheme(req) {
 
 }
 
+function getCartScheme(product) {
+	var id;
+    var img_produto;
+    var nome_produto;
+    var descricao;
+    var preco;
+    var quantidade_no_carrinho;
+    var total_item;
+
+    id = product.id;
+	img_produto = product.img_produto;
+	nome_produto = product.nome_produto;
+	descricao = product.descricao;
+	preco = product.preco;
+	quantidade_no_carrinho = product.quantidade_no_carrinho;
+	total_item = product.total_item;
+	
+	return {
+		id : id,
+		img_produto : img_produto,
+		nome_produto : nome_produto,
+		descricao : descricao,
+		preco : preco,
+		quantidade_no_carrinho : quantidade_no_carrinho,
+		total_item : total_item
+	}
+
+}
+
+function getScheduleScheme(req) {
+	var servico;
+    var data;
+    var horario;
+
+    servico = req.servico;
+	data = req.data;
+	horario = req.horario;
+	
+	return {
+		servico : servico,
+		data : data,
+		horario : horario
+	}
+
+}
+
 app.post('/users', function(req, res) {
     var userScheme = getUserScheme(req);
 
@@ -222,10 +271,6 @@ app.post('/users', function(req, res) {
 app.post('/register-product', function(req, res) {
     var productScheme = getProductScheme(req);
 
-	if (_.find(products, productScheme.productSearch)) {
-	 return res.status(400).send("A product with that id already exists");
-	}
-
 	// Ensures that no ID will be NaN
 	if(_.max(products, 'id') != undefined)
 		productScheme.id = _.max(products, 'id').id + 1;
@@ -249,8 +294,6 @@ app.post('/register-service', function(req, res) {
 		serviceScheme.id = _.max(services, 'id').id + 1;
 	else
 		serviceScheme.id = 0;
-
-	serviceScheme.id = _.max(services, 'id').id + 1;
 
 	services.push(serviceScheme);
 
@@ -288,12 +331,10 @@ app.post('/register-pet', function(req, res) {
 	var petScheme = getPetScheme(req);
 
 	// Ensures that no ID will be NaN
-	if(_.max(products, 'id') != undefined)
+	if(_.max(pets, 'id') != undefined)
 		petScheme.id = _.max(pets, 'id').id + 1;
 	else
 		petScheme.id = 0;
-
-	petScheme.id = _.max(pets, 'id').id + 1;
 
 	pets.push(petScheme);
 
@@ -304,15 +345,13 @@ app.post('/register-pet', function(req, res) {
 });
 
 app.post('/register-payment', function(req, res) {
-	var paymentScheme = getPetScheme(req);
+	var paymentScheme = getPaymentScheme(req);
 
 	// Ensures that no ID will be NaN
 	if(_.max(payments, 'id') != undefined)
 		paymentScheme.id = _.max(payments, 'id').id + 1;
 	else
 		paymentScheme.id = 0;
-
-	paymentScheme.id = _.max(payments, 'id').id + 1;
 
 	payments.push(paymentScheme);
 
@@ -322,8 +361,55 @@ app.post('/register-payment', function(req, res) {
 	});
 });
 
-app.get('/payments/:type', function(req,res) {
-	var type = req.params.type;
-	var payment = _.filter(payments, {'type': type})
-	res.status(201).send(payment);
+
+app.post('/submit-cart', function(req, res) {
+	var cart = [];
+	req.body.forEach((product) => {
+		var productScheme = getCartScheme(product);
+		cart.push(productScheme);
+	});
+	console.log(cart);
+	carts = cart;
+
+	res.status(201).send({
+		id_token: createIdToken(carts),
+		access_token: createAccessToken(),
+	});
 });
+
+
+app.post('/new-schedule', function(req, res) {
+	var scheduleScheme = getScheduleScheme(req);
+
+	// Ensures that no ID will be NaN
+	if(_.max(schedules, 'id') != undefined)
+		scheduleScheme.id = _.max(schedules, 'id').id + 1;
+	else
+		scheduleScheme.id = 0;
+
+	schedules.push(scheduleScheme);
+
+	res.status(201).send({
+		id_token: createIdToken(scheduleScheme),
+		access_token: createAccessToken(),
+	});
+});
+
+app.get('/carts/:id', function(req, res) {
+	let id = req.params.id;
+	carts = _.filter(carts, (product) => {
+		return product.id != id;
+	});
+	console.log(carts);
+
+	res.status(201).send(carts);
+});
+
+app.get('/payments', function(req,res) {
+	res.status(201).send(payments);
+});
+
+app.get('/carts', function(req,res) {
+	res.status(201).send(_.sortBy(carts, 'type'));
+});
+

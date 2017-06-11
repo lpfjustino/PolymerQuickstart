@@ -1,6 +1,6 @@
 # Polymer App Toolbox - Starter Kit
 
-[![Build Status](https://travis-ci.org/PolymerElements/polymer-starter-kit.svg?branch=master)](https://travis-ci.org/PolymerElements/polymer-starter-kit)
+[![Build Status](https://travis-ci.org/PolymerElements/pet-loiro.svg?branch=master)](https://travis-ci.org/PolymerElements/pet-loiro)
 
 This template is a starting point for building apps using a drawer-based
 layout. The layout is provided by `app-layout` elements.
@@ -20,7 +20,7 @@ The PRPL pattern, in a nutshell:
 
 ### Migrating from Polymer Starter Kit v1?
 
-[Check out our blog post that covers what's changed in PSK2 and how to migrate!](https://www.polymer-project.org/1.0/blog/2016-08-18-polymer-starter-kit-or-polymer-cli.html)
+[Check out our blog post that covers what's changed in PSK2 and how to migrate!](https://www.polymer-project.org/1.0/blog/2016-08-18-pet-loiro-or-polymer-cli.html)
 
 ### Quickstart
 

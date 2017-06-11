@@ -26,25 +26,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
     <app-location route="{{route}}"></app-location>
+
+    <iron-ajax auto
+      id="cartAjax2"
+      url="http://localhost:3001/carts" 
+      handle-as="json" 
+      last-response="{{ajaxResponse}}"
+      on-response="setForm"></iron-ajax>
+
+    <iron-ajax 
+      id="cartAjax" 
+      handle-as="json"
+      ></iron-ajax>
+
     <iron-localstorage
-        id="cartStr"
-        name="cart-storage"
-        value="{{string_cart}}"
-        on-iron-localstorage-load="initializeCart">
-        </iron-localstorage>
+      id="ps"
+      name="payment-storage"
+      value={{formData}}></iron-localstorage>
 
     <h1>Seu Carrinho</h1>
     <div class="card">
       
-      <table>
-        <th></th>
-        <template is="dom-repeat" items="{{cart2}}">
+      <table id="table">
+        <template is="dom-repeat" items="[[ajaxResponse]]" observe=>
           <tr>
             <td>{{item.nome_produto}}</td>
             <td>{{item.preco}}</td>
             <td>{{item.quantidade_no_carrinho}}</td>
+            <td>{{item.total_item}}</td>
             
-            <td><paper-button on-tap="removeItem" id="{{item.id}}">Excluir</paper-button></td>
+            <td><paper-button on-tap="removeItem">Excluir</paper-button></td>
           </tr> 
         </template>
         <tr>
@@ -64,26 +75,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       static get properties() {
       return {
-        string_cart: {
-          type: String,
+        formData:{
+          type: Object,
           notify: true
-        },
-        cart: {
-          type: Array,
-          notify: true
-        },
-        cart2: Array
-      };
+        }
+      }
       }
 
-      initializeCart(){
-        let cart = JSON.parse(this.string_cart);
-        this.set('cart2', cart);
-        console.log(JSON.stringify(cart));
+
+      removeItem(e){
+        
+        let response = e.model.item.id;
+        this.$.cartAjax.url = 'http://localhost:3001/carts/'+ response;
+        this.$.cartAjax.generateRequest();
       }
 
-      removeItem(id){
-        this.cart.pop();
+      setForm(e){
+        var response = e.detail.response;
+        var string_items = '';
+        var total_items = 0;
+
+        response.forEach((product) => {
+          string_items += product.nome_produto + "; ";
+          total_items += parseInt(product.preco);
+        });
+
+        this.formData = {
+          items: string_items,
+          total: total_items,
+          type: "product"
+        };
       }
 
       continueShopping(){
@@ -91,9 +112,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       finishOrder(){
-        this.set('route.path', '/my-payment');
+        this.set('route.path', '/my-pagamento');
       }
-    }
+
+      }
+
+    
     window.customElements.define(MyCarrinho.is, MyCarrinho);
   </script>
 </dom-module>

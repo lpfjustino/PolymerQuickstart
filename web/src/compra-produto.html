@@ -67,20 +67,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	.box {
 		width: 400px;
 		height: 100%;
-		margin-left: 300px;
-		margin-right: 100%;
+		display: block;
+		margin: 0 auto;
 	}	
 
 	
 	</style>
 		<app-location route="{{route}}"></app-location>
 	
-		<iron-localstorage
-				name="cart-storage"
-				iron-localstorage-load-empty="initializeDefault"
-				on-iron-localstorage-load="initializeCart"
-				value="{{cart}}">
-				</iron-localstorage>
+		
+		<iron-ajax	
+			id="postCart"
+			method="post"
+			handle-as="text"
+			content-type="application/json"></iron-ajax>
+
 
 		<iron-ajax auto url="../products.json" handle-as="json" last-response="{{ajaxResponse}}"></iron-ajax>
 			<div class = "grid">
@@ -92,7 +93,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			    	<div>
 				    	<img class="group list-group-image" src = {{item.img_produto}} alt="" />
 				    </div>
-		            <span>{{item.nome_produto}}</span>
+		            <span><b>{{item.nome_produto}}</b></span>
 		            <div>
 		            	<p>Descrição:<br>{{item.descricao}}</p>
 					</div>
@@ -187,7 +188,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 						nome_produto: e.model.item.nome_produto,
 						descricao: e.model.item.descricao,
 						preco: e.model.item.preco,
-						quantidade_no_carrinho: parseInt(e.model.item.amount)
+						quantidade_no_carrinho: parseInt(e.model.item.amount),
+						total_item: parseInt(e.model.item.amount) * parseInt(e.model.item.preco)
 					};
 
 				this.cart_aux.push(item);
@@ -210,15 +212,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					alert("Insira uma quantidade válida!");
 			}
 		}
+		
+		_setReqBody() {
+				this.$.postCart.body = this.cart_aux;
+				console.log(this.cart_aux);
+			}
+
 		proceed_To_Cart() {
-			this.set('cart', JSON.stringify(this.cart_aux));
+			this.$.postCart.url = 'http://localhost:3001/submit-cart';
+			this._setReqBody();
+			this.$.postCart.generateRequest();
 			this.set('route.path', '/my-carrinho');
 		}
-
+		/*
 		initializeCart() {
 			let inst_cart = JSON.parse(this.cart);
         	this.set('cart_aux', inst_cart);
 		}
+		*/
 	}
 	window.customElements.define(CompraProduto.is, CompraProduto);
 
