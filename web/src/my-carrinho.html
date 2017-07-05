@@ -1,0 +1,123 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-carrinho">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+    <app-location route="{{route}}"></app-location>
+
+    <iron-ajax auto
+      id="cartAjax2"
+      url="http://localhost:3001/carts" 
+      handle-as="json" 
+      last-response="{{ajaxResponse}}"
+      on-response="setForm"></iron-ajax>
+
+    <iron-ajax 
+      id="cartAjax" 
+      handle-as="json"
+      ></iron-ajax>
+
+    <iron-localstorage
+      id="ps"
+      name="payment-storage"
+      value={{formData}}></iron-localstorage>
+
+    <h1>Seu Carrinho</h1>
+    <div class="card">
+      
+      <table id="table">
+        <template is="dom-repeat" items="[[ajaxResponse]]" observe=>
+          <tr>
+            <td>{{item.nome_produto}}</td>
+            <td>{{item.preco}}</td>
+            <td>{{item.quantidade_no_carrinho}}</td>
+            <td>{{item.total_item}}</td>
+            
+            <td><paper-button on-tap="removeItem">Excluir</paper-button></td>
+          </tr> 
+        </template>
+        <tr>
+          <td colspan="3"><paper-button on-tap="continueShopping">Continuar Comprando</paper-button></td>
+          <td><span>TOTAL</span></td>
+          <td><paper-button on-tap="finishOrder">Finalizar Compra</paper-button></td>
+        </tr>
+      </table>
+      
+    </div>
+    
+  </template>
+
+  <script>
+    class MyCarrinho extends Polymer.Element {
+      static get is() { return 'my-carrinho'; }
+
+      static get properties() {
+      return {
+        formData:{
+          type: Object,
+          notify: true
+        }
+      }
+      }
+
+
+      removeItem(e){
+        
+        let response = e.model.item.id;
+        this.$.cartAjax.url = 'http://localhost:3001/carts/'+ response;
+        this.$.cartAjax.generateRequest();
+      }
+
+      setForm(e){
+        let response = e.detail.response;
+        let string_items = '';
+        let total_items = 0;
+
+        response.forEach((product) => {
+          string_items += product.nome_produto + "; ";
+          total_items += parseInt(product.preco);
+        });
+
+        this.formData = {
+          items: string_items,
+          total: total_items,
+          type: "product"
+        };
+      }
+
+      continueShopping(){
+        this.set('route.path', '/compra-produto');
+      }
+
+      finishOrder(){
+        this.set('route.path', '/my-pagamento');
+      }
+
+      }
+
+    
+    window.customElements.define(MyCarrinho.is, MyCarrinho);
+  </script>
+</dom-module>
