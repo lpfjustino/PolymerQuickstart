@@ -3,8 +3,8 @@
 <dom-module id="app-data">
     <script>
         (function() {
-            var instances = [];
-            var vars = Object.create(Polymer.Base);
+            let instances = [];
+            let lets = Object.create(Polymer.Base);
 
             Polymer({
                 is: 'app-data',
@@ -31,7 +31,7 @@
 
                 detached: function() {
                     key = this.getAttribute('key');
-                    var i = instances.indexOf({key:key, instance:this});
+                    let i = instances.indexOf({key:key, instance:this});
                     if (i >= 0) {
                         instances.splice(i, 1);
                     }
@@ -42,10 +42,10 @@
                     if (!key) {
                         throw('_data_changed: app-data element requires key');
                     }
-                    vars.set(key, newvalue);
+                    lets.set(key, newvalue);
 
                     // notify the instances with the correct key
-                    for (var i = 0; i < instances.length; i++) {
+                    for (let i = 0; i < instances.length; i++) {
                         if (instances[i].key == key) {
                             instances[i].instance.notifyPath('data', newvalue);
                         }

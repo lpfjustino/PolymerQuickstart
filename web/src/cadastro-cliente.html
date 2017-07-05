@@ -24,18 +24,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	<style include="shared-styles">
 		:host {
 				display: block;
-
 				padding: 10px;
 			}
-
 			.wrapper-btns {
 				margin-top: 15px;
 			}
-
 			paper-button.link {
 				color: #757575;
 			}
-
 			.alert-error {
 				background: #ffcdd2;
 				border: 1px solid #f44336;
@@ -44,7 +40,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				font-size: 14px;
 				padding: 10px;
 			}
-
 			#login-container {
 				width: 80%;
 				margin: 0 auto;
@@ -53,18 +48,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 	<iron-ajax
 			id="registerAjax"
-			method="post"
+			method="put"
 			content-type="application/json"
 			handle-as="text"
 			on-response="handleUserResponse"
 			on-error="handleUserError"></iron-ajax>
 
 	<app-data key="userData" data="{{storedUser}}"></app-data>
+	<!--
 		<iron-localstorage
 			name="user-storage"
 			on-iron-localstorage-load="redirect"
 			value="{{storedUser}}"></iron-localstorage>
-
+	-->
 	<app-location route="{{route}}"></app-location>
 
 	<div class="card" id="register-container">
@@ -95,7 +91,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	<script>
 	class CadastroCliente extends Polymer.Element {
 		static get is() { return 'cadastro-cliente'; }
-
 		static get properties() {
 				return {
 					storedUser: {
@@ -107,30 +102,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 						type: Object,
 						value: () => {
 							return {
-								username: '',
-								password: '',
-								fullname: '',
-								address: '',
-								phone: '',
-								email: '',
+								username: 'daab',
+								password: 'aa',
+								fullname: 'aa',
+								address: 'aa',
+								phone: 'aa',
+								email: 'aa',
 								pic : {},
 								role: 'user'
-							}
+							};
 						}
 					},
-				}
+				};
 			}
-
 		postRegister() {
 			this.$.registerAjax.url = 'http://localhost:3001/register-user';
 			this._setReqBody();
 			this.$.registerAjax.generateRequest();
 		}
-
 		_setReqBody() {
 			this.$.registerAjax.body = this.formData;
 		}
-
 		handleUserResponse(event) {
 			var response = JSON.parse(event.detail.response);
 	
@@ -143,18 +135,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					role: response.role,
 					loggedin: true
 				};
-
 				this.redirect();
 			}
-
 			// reset form data
 			this.formData = {};
 		}
-
 		handleUserError(event) {
 			this.error = event.detail.request.xhr.response;
 		}
-
 		// TODO: Corrigir o bug em que o redirecionamento só acontece
 		// no momento do login ou no momento que a página é acessada
 		// pela primeira vez, mas não nas próximas vezes que a página
@@ -170,12 +158,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					this.set('route.path', '/my-view404');
 			}
 		}
-
 		_handleFiles() {
 			this.formData.pic = this.$.input_pic.inputElement.inputElement.files[0];
 		}
 	}
-
 	window.customElements.define(CadastroCliente.is, CadastroCliente);
 	</script>
 </dom-module>

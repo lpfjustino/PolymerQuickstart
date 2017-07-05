@@ -12,6 +12,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+
 
 <link rel="import" href="shared-styles.html">
 <!--<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">-->
@@ -19,43 +22,98 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- include classes in the main document -->
 
 <dom-module id="compra-produto">
+
 	<template>
 	<style include="shared-styles">
 
-		:host {
-		display: block;
+	:host {
+		display: inline-block;
 
 		padding: 10px;
-		}
-		<style is="custom-style" include="iron-flex iron-flex-alignment">
+
 		
+		}
+
+	paper-input {
+      width: 25px;
+    }
+
+    .inline, paper-input {
+      display: inline;
+      width: 150px;
+      height: 100%;
+      margin-left: 20%;
+
+    }
+    .indigo {
+    	height: 3.2em;
+    	
+    }
+
+    .horizontal {
+      @apply(--layout-horizontal);
+    }
+
+    .grid {
+	  lost-utility: clearfix;
+	  lost-center: 100%;
+	  position: relative;
+
+	}
+	.grid__col {
+	  lost-column: 1/2 2 0px; 
+	}
+
+	.box {
+		width: 400px;
+		height: 100%;
+		display: block;
+		margin: 0 auto;
+	}	
 
 	
 	</style>
+		<app-location route="{{route}}"></app-location>
 	
-	
-		<iron-ajax auto url="http://127.0.0.1:3001/products" handle-as="json" last-response="{{ajaxResponse}}"></iron-ajax>
-			<div id="pcId" layout horizontal wrap>
+		
+		<iron-ajax	
+			id="postCart"
+			method="post"
+			handle-as="text"
+			content-type="application/json"></iron-ajax>
+
+
+		<iron-ajax auto url="../products.json" handle-as="json" last-response="{{ajaxResponse}}"></iron-ajax>
+			<div class = "grid">
+			<table>
 		    <template is="dom-repeat" items="[[ajaxResponse]]" index-as="i">
-		    
-			    <div class = "card">
+		    	<tr>
+		    		<td>
+			    <div class = "card box">
 			    	<div>
 				    	<img class="group list-group-image" src = {{item.img_produto}} alt="" />
 				    </div>
-		            <span>{{item.nome_produto}}</span>
+		            <span><b>{{item.nome_produto}}</b></span>
 		            <div>
 		            	<p>Descrição:<br>{{item.descricao}}</p>
 					</div>
 					<div>
-						<p>R$ {{item.preco}}
+						<p>R$ {{item.preco}}</p>
 					</div>
-
-					<paper-input  label="Quantidade" value= "{{item.i.amount}}"></paper-input>
-					<paper-button raised="" on-tap = "to_Cart" data-args = "item.i" class="indigo" role="button" tabindex="0" animated="" elevation="1" aria-disabled="false">Adicionar ao Carrinho</paper-button>
-	            </div>	
+					<div class = "horizontal">
+					<paper-input  label="Quantidade:" class = "inline" value= "{{item.amount}}"></paper-input>
+					<paper-button raised="" on-tap = "to_Cart" data-args = "item.amount" class="indigo" role="button" tabindex="0" animated="" elevation="1" aria-disabled="false">Carrinho »</paper-button>
+					</div>
+	            </div>
+	            	</td>
+	            </tr>
         	</template>
+        	</table>
         	</div>
-	
+
+        	<div>
+        		<paper-button raised="" on-tap = "proceed_To_Cart" class="indigo" role="button" tabindex="0" animated="" elevation="1" aria-disabled="false">Ir para o carrinho</paper-button>
+			</div>
 	
 	</template>
 
@@ -67,8 +125,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		static get properties() {
 			return {
 				amount: Number,
-				//TENTEI FAZER UM VETOR DE AMOUNT AQUI EMBAIXO, AÍ FICA UM AMOUNT PRA CADA INPUT, ANTES TAVA SÓ UM NUMBER
-				// SÓ QUE DAÍ TERIA O PROBLEMA DE TER ITEM.I.AMOUNT.I, PQ TEM UM OBSERVER PRA CADA AMOUNT... DEFINIDO AQUI EMBAIXO TB
+				
 				/*
 				amount: { 
 					type: Array,
@@ -76,42 +133,105 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				},
 				*/
 
-				//observer que vi no stackoverflow
-				observers: ['onInputChange(*.amount)'],
-				//isso aqui era o vetor de amount na real que eu tava usando, mas acredito que só o vetor amount seja o suficiente, só to mantendo
-				//aqui pq tava funcionando gambiarradamente (o que mostrei pra ti e pro boss)
+				//observer que vi no stackoverflow, mas acho q n precisa disso aqui n... 
+				//observers: ['onInputChange(*.amount)'],
+				
 				items_in_cart: {
 					type: Array,
 					value: []
+				},
+				//cart: Array
+				
+				cart: {
+					type: Array,
+					value: () => { return [] },
+					notify: true,
+					observer: '_cartChanged'
+				},
+				
+				cart_aux: {
+					type: Array,
+					value: []
 				}
-				
-				
 			};
 		}
-		//essa função retorna o json do item inserido no carrinho
-		onInputChange(changedInput) {console.log(changedInput);}
+		_cartChanged() { 
+		}
+		initializeDefault() {
+			this.cart = [];
+		}
+		//acho que isso tb é desnecessário, n testei ainda
+		//onInputChange(changedInput) {console.log(changedInput);}
+		//essa função retorna o json do item inserido no carrinho,
+		getIndexOfGivenModel(obj) {
+			return obj.id == e.model.id;
+		}
 		to_Cart(e) {
+			
 			//console.log(this.$.pcId.querySelector(All('paper-input').value));
 			//console.log(e.target);
 			//se não está no carrinho e a qtdade for valida
-			console.log(e.path[0].getAttribute('data-args'));
+			//console.log(e.model.item.amount);
+			//console.log(e.target.getAttribute('data-args'));
+			//console.log("A2");
+			//console.log(e.model);
+
+			//console.log(e.path[0].getAttribute('data-args'));
 			//console.log(Polymer.dom(e).path[0].getAttribute('data-args').amount);
-			if(this.items_in_cart[e.model.item.id] == null && e.model.amount > 0) {
+			if(this.items_in_cart[e.model.item.id] == null && e.model.item.amount > 0) {
 				//coloco no carrinho
-				this.items_in_cart[e.model.item.id] = e.model.amount;
-				let item = JSON.stringify(e.model.item);
-				console.log(item);
+				this.items_in_cart[e.model.item.id] = e.model.item.amount;
+				let item = 
+					{
+						id: e.model.item.id,
+						img_produto: e.model.item.img_produto,
+						nome_produto: e.model.item.nome_produto,
+						descricao: e.model.item.descricao,
+						preco: e.model.item.preco,
+						quantidade_no_carrinho: parseInt(e.model.item.amount),
+						total_item: parseInt(e.model.item.amount) * parseInt(e.model.item.preco)
+					};
+
+				this.cart_aux.push(item);
+				//console.log(JSON.stringify(this.cart_aux));
+				//console.log(JSON.stringify(this.cart_aux));
+				//this.cart.push(item);
+				//this.push('cart[e.model.item.id]', item);
+				
+				//let item = JSON.stringify(e.model.item);
+				//console.log("B");
+				//console.log(JSON.stringify(this.cart));
+				//console.log(item);
 				//retorno o item
-				return item;
+				//return item;
 			}
 			else {
 				if(this.items_in_cart[e.model.item.id] > 0)
 					alert("Esse item já está no carrinho!")
-				if(isNaN(e.model.amount) || e.model.amount <= 0)
+				if(isNaN(e.model.item.amount) || e.model.item.amount <= 0)
 					alert("Insira uma quantidade válida!");
 			}
 		}
+		
+		_setReqBody() {
+				this.$.postCart.body = this.cart_aux;
+				console.log(this.cart_aux);
+			}
+
+		proceed_To_Cart() {
+			this.$.postCart.url = 'http://localhost:3001/submit-cart';
+			this._setReqBody();
+			this.$.postCart.generateRequest();
+			this.set('route.path', '/my-carrinho');
+		}
+		/*
+		initializeCart() {
+			let inst_cart = JSON.parse(this.cart);
+        	this.set('cart_aux', inst_cart);
+		}
+		*/
 	}
 	window.customElements.define(CompraProduto.is, CompraProduto);
+
 	</script>
 </dom-module>

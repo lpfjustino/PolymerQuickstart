@@ -1,5 +1,5 @@
 {
-  "name": "polymer-starter-kit",
+  "name": "pet-loiro",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "eslint": "^3.19.0",
@@ -11,5 +11,8 @@
     "lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
     "test": "polymer test",
     "test:integration": "polymer build # test that psk builds without error with the CLI"
+  },
+  "dependencies": {
+    "bower": "^1.8.0"
   }
 }

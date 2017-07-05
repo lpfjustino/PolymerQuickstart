@@ -11,6 +11,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="my-pagamento">
@@ -18,87 +24,98 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	<style include="shared-styles">
 		:host {
 		display: block;
-
 		padding: 10px;
 		}
 	</style>
 
     <app-location route="{{route}}"></app-location>
 
-	<div class="card">
-		<form class="form-horizontal" role="form">
-	<div class="form-group">
-		<label class="col-sm-3 control-label" for="card-holder-name">Nome no Cartao</label>
-		<div class="col-sm-9">
-		<input type="text" class="form-control" name="card-holder-name" id="card-holder-name" placeholder="Nome">
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-sm-3 control-label" for="card-number">Numero do Cartao</label>
-		<div class="col-sm-9">
-		<input type="text" class="form-control" name="card-number" id="card-number" placeholder="Numero do Cartao de Debito/Credito">
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-sm-3 control-label" for="expiry-month">Expiracao</label>
-		<div class="col-sm-9">
-		<div class="row">
-		<div class="col-xs-3">
-		<select class="form-control col-sm-2" name="expiry-month" id="expiry-month">
-			<option>Month</option>
-			<option value="01">Jan (01)</option>
-			<option value="02">Feb (02)</option>
-			<option value="03">Mar (03)</option>
-			<option value="04">Apr (04)</option>
-			<option value="05">May (05)</option>
-			<option value="06">June (06)</option>
-			<option value="07">July (07)</option>
-			<option value="08">Aug (08)</option>
-			<option value="09">Sep (09)</option>
-			<option value="10">Oct (10)</option>
-			<option value="11">Nov (11)</option>
-			<option value="12">Dec (12)</option>
-		</select>
-		</div>
-		<div class="col-xs-3">
-		<select class="form-control" name="expiry-year">
-			<option value="13">2013</option>
-			<option value="14">2014</option>
-			<option value="15">2015</option>
-			<option value="16">2016</option>
-			<option value="17">2017</option>
-			<option value="18">2018</option>
-			<option value="19">2019</option>
-			<option value="20">2020</option>
-			<option value="21">2021</option>
-			<option value="22">2022</option>
-			<option value="23">2023</option>
-		</select>
-		</div>
-		</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-sm-3 control-label" for="cvv">CVV</label>
-		<div class="col-sm-3">
-		<input type="text" class="form-control" name="cvv" id="cvv" placeholder="Codigo de Seguranca">
-		</div>
-	</div>
-    <paper-button raised class="primary" on-tap="pay">Pagar</paper-button>
-	</form>
-	</div>
+    <iron-ajax
+      id="registerAjax"
+      method="post"
+      content-type="application/json"
+      handle-as="text"></iron-ajax>
+
+    <iron-localstorage
+      id="ps"
+      name="payment-storage"
+      value="{{fromCart}}"
+      on-iron-localstorage-load="setPayment"></iron-localstorage>
+
+    <div class="card">
+    	<paper-input label="Nome do titular" value="{{formData.user}}"></paper-input>
+      	<paper-input label="Número do cartão"></paper-input>
+      	<div>Expiração</div>
+      	<div>
+      	<paper-dropdown-menu label="Mês">
+      		<paper-listbox slot="dropdown-content" selected="1">
+      			<paper-item>1</paper-item>
+      			<paper-item>2</paper-item>
+      			<paper-item>3</paper-item>
+      			<paper-item>4</paper-item>
+      			<paper-item>5</paper-item>
+      			<paper-item>6</paper-item>
+      			<paper-item>7</paper-item>
+      			<paper-item>8</paper-item>
+      			<paper-item>9</paper-item>
+      			<paper-item>10</paper-item>
+      			<paper-item>11</paper-item>
+      			<paper-item>12</paper-item>
+      		</paper-listbox>
+      	</paper-dropdown-menu>
+      	</div>
+      	<paper-dropdown-menu label="Ano">
+      		<paper-listbox slot="dropdown-content" selected="1">
+      			<paper-item>2017</paper-item>
+      			<paper-item>2018</paper-item>
+      			<paper-item>2019</paper-item>
+      			<paper-item>2020</paper-item>
+      			<paper-item>2021</paper-item>
+      			<paper-item>2022</paper-item>
+      			<paper-item>2023</paper-item>
+      			<paper-item>2024</paper-item>
+      		</paper-listbox>
+      	</paper-dropdown-menu>
+      	<paper-input label="Código de segurança (CVV)"></paper-input>
+
+    	<paper-button raised class="primary" on-tap="pay">Pagar</paper-button>
+    </div>
+	
 	</template>
 
 	<script>
 	class MyPagamento extends Polymer.Element {
 		static get is() { return 'my-pagamento'; }
 
+		static get properties() {
+        return {
+          error: String,
+          fromCart: {
+            type: Object,
+            value: () => { return { items:'', total: '', type: '' } },
+            notify: true
+          },
+          formData: {
+            type: Object,
+            value: () => {return { user: '', items: '', total: '', type: ''}}
+          }
+        }
+      	}
+
+        setPayment(){
+          this.formData.items = this.fromCart.items;
+          this.formData.total = this.fromCart.total;
+          this.formData.type = this.fromCart.type;
+        }
+
         pay() {
-            alert('Compra efetuada com sucesso.');
-            this.set('route.path', '/homescreen-usuario');
+        	this.$.registerAjax.url = 'http://localhost:3001/register-payment';
+        	this.$.registerAjax.body = this.formData;
+          console.log(this.formData);
+        	this.$.registerAjax.generateRequest();
+          this.set('route.path', '/compra-produto');
         }
 	}
-
 	window.customElements.define(MyPagamento.is, MyPagamento);
 	</script>
 </dom-module>

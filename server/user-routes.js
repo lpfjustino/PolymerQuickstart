@@ -5,6 +5,11 @@ var express = require('express'),
 
 var app = module.exports = express.Router();
 
+var request = require('request');
+var uuidv4 = require('uuid/v4');
+
+var db_url = "http://127.0.0.1:5984/pet_loiro";
+
 // XXX: This should be a database of users :).
 var users = [
 	{
@@ -21,20 +26,16 @@ var users = [
 	}
 	];
 
-var products = [
-		{id:1, nome_produto:'produto1', preco: 20, descricao:'desc', img_produto: ''},
-		{id:2, nome_produto:'produto2', preco: 30, descricao:'desc', img_produto: ''},
-	];
+var products = [{}];
 
-var services = [
-		{id:1, nome:'servico1'},
-		{id:2, nome:'servico2'}
-	];
+var services = [{}];
 
-var pets = [
-		{id:1, nome:'pet1'},
-		{id:2, nome:'pet2'}
-	];
+var pets = [{}];
+
+var payments = [{}];
+
+var carts = [{"id":1,"img_produto":"http://www.zolux.com/118394-large_default/soho-pet-carrier-black.jpg","nome_produto":"Bolsatransportadora","descricao":"Com essa bolsa, voce podera transportar seu cachorro de pequeno porte facilmente em viagens.","preco":160,"quantidade_no_carrinho":2,"total_item":320}];
+var schedules = [{}];
 
 function createIdToken(user) {
 	return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*60*5 });
@@ -54,9 +55,9 @@ function createAccessToken() {
 
 // Generate Unique Identifier for the access token
 function genJti() {
-	let jti = '';
-	let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	for (let i = 0; i < 16; i++) {
+	var jti = '';
+	var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	for (var i = 0; i < 16; i++) {
 			jti += possible.charAt(Math.floor(Math.random() * possible.length));
 	}
 	
@@ -65,51 +66,51 @@ function genJti() {
 
 function getUserScheme(req) {
 	var id;
-    var username;
-    var type;
-    var fullname;
-    var address;
-    var phone;
-    var email;
-    var pic;
-    var role;
-    var userSearch = {};
+	var username;
+	var type;
+	var fullname;
+	var address;
+	var phone;
+	var email;
+	var pic;
+	var role;
+	var userSearch = {};
 
-    // The POST contains a username and not an email
-    if(req.body.username) {
-        username = req.body.username;
-        type = 'username';
-        userSearch = { username: username };
-    }
-    // The POST contains an email and not an username
-    else if(req.body.email) {
-        username = req.body.email;
-        type = 'email';
-        userSearch = { email: username };
-    }
+	// The POST contains a username and not an email
+	if(req.body.username) {
+	   username = req.body.username;
+		type = 'username';
+		userSearch = { username: username };
+	}
+	// The POST contains an email and not an username
+	else if(req.body.email) {
+		username = req.body.email;
+		type = 'email';
+		userSearch = { email: username };
+	}
 
-    id = req.body.id;
-    password = req.body.password;
-    fullname = req.body.fullname;
-    address = req.body.address;
-    phone = req.body.phone;
-    email = req.body.email;
-    pic = req.body.pic;
-    role = req.body.role;
+	id = req.body.id;
+	password = req.body.password;
+	fullname = req.body.fullname;
+	address = req.body.address;
+	phone = req.body.phone;
+	email = req.body.email;
+	pic = req.body.pic;
+	role = req.body.role;
 
-    return {
-    	id: id,
-        username: username,
-        password: password,
-        type: type,
-        fullname: fullname,
-        address: address,
-        phone: phone,
-        email: email,
-        pic: pic,
-        role: role,
-        userSearch: userSearch
-    }
+	return {
+		id: id,
+		username: username,
+		password: password,
+		type: type,
+		fullname: fullname,
+		address: address,
+		phone: phone,
+		email: email,
+		pic: pic,
+		role: role,
+		userSearch: userSearch
+	};
 }
 
 function getProductScheme(req) {
@@ -118,23 +119,23 @@ function getProductScheme(req) {
 	var descricao;
 	var qtd;
 	var imagem;
-	var productSearch = {}
+	var productSearch = {};
 
-    id = req.body.id;
+	id = req.body.id;
 	nome = req.body.nome;
 	descricao = req.body.descricao;
 	qtd = req.body.qtd;
 	imagem = req.body.imagem;
 	productSearch = { id: id };
 
-    return {
-        id: id,
+	return {
+		id: id,
 		nome: nome,
 		descricao: descricao,
 		qtd: qtd,
 		imagem: imagem,
 		productSearch: productSearch
-    }
+	};
 }
 
 function getServiceScheme(req) {
@@ -143,23 +144,23 @@ function getServiceScheme(req) {
 	var descricao;
 	var preco;
 	var imagem;
-	var serviceSearch = {}
+	var serviceSearch = {};
 
-    id = req.body.id;
+	id = req.body.id;
 	nome = req.body.nome;
 	descricao = req.body.descricao;
 	qtd = req.body.qtd;
 	imagem = req.body.imagem;
 	serviceSearch = { id: id };
 
-    return {
-        id: id,
+	return {
+		id: id,
 		nome: nome,
 		descricao: descricao,
 		qtd: qtd,
 		imagem: imagem,
 		serviceSearch: serviceSearch
-    }
+	};
 }
 
 function getPetScheme(req) {
@@ -178,12 +179,78 @@ function getPetScheme(req) {
 		breed: breed,
 		age: age,
 		pic: pic
-	}
+	};
 
 }
 
-app.post('/register-user', function(req, res) {
-    var userScheme = getUserScheme(req);
+function getPaymentScheme(req) {
+	var user;
+	var items;
+	var total;
+	var type;
+
+
+	user = req.body.user;
+	items = req.body.items;
+	total = req.body.total;
+	type = req.body.type;
+
+	return {
+		user: user,
+		items: items,
+		total: total,
+		type: type
+	};
+}
+
+function getCartScheme(product) {
+	var id;
+	var img_produto;
+	var nome_produto;
+	var descricao;
+	var preco;
+	var quantidade_no_carrinho;
+	var total_item;
+
+	id = product.id;
+	img_produto = product.img_produto;
+	nome_produto = product.nome_produto;
+	descricao = product.descricao;
+	preco = product.preco;
+	quantidade_no_carrinho = product.quantidade_no_carrinho;
+	total_item = product.total_item;
+	
+	return {
+		id : id,
+		img_produto : img_produto,
+		nome_produto : nome_produto,
+		descricao : descricao,
+		preco : preco,
+		quantidade_no_carrinho : quantidade_no_carrinho,
+		total_item : total_item
+	};
+
+}
+
+function getScheduleScheme(req) {
+	var servico;
+	var data;
+	var horario;
+
+	servico = req.servico;
+	data = req.data;
+	horario = req.horario;
+	
+	return {
+		servico : servico,
+		data : data,
+		horario : horario
+	};
+
+}
+
+app.put('/register-user', function(req, res) {
+	var userScheme = getUserScheme(req);
 
 	if (!userScheme.username || !req.body.password) {
 		return res.status(400).send("You must send the username and the password");
@@ -194,21 +261,38 @@ app.post('/register-user', function(req, res) {
 	}
 
 	userScheme.id = _.max(users, 'id').id + 1;
-	users.push(userScheme);
+
+	//users.push(userScheme);
+	var id = uuidv4();
+	var options = {
+		method: 'PUT',
+		url: 'http://localhost:5984/pet_loiro/'+id,
+		headers: { 'content-type': 'application/json' },
+		body: 
+		{
+			collection: 'users',
+			userscheme: userScheme
+		},
+		json: true
+	};
+
+	request(options, function (error, response, body) {
+		if (error) throw new Error(error);
+		console.log(body);
+	});
+
+
+	console.log('ai que penis');
 
 	res.status(201).send({
 		id_token: createIdToken(userScheme),
 		access_token: createAccessToken(),
-        role: req.body.role
+		role: req.body.role
 	});
 });
 
 app.post('/register-product', function(req, res) {
-    var productScheme = getProductScheme(req);
-
-	if (_.find(products, productScheme.productSearch)) {
-	 return res.status(400).send("A product with that id already exists");
-	}
+	var productScheme = getProductScheme(req);
 
 	// Ensures that no ID will be NaN
 	if(_.max(products, 'id') != undefined)
@@ -226,15 +310,13 @@ app.post('/register-product', function(req, res) {
 });
 
 app.post('/register-service', function(req, res) {
-    var serviceScheme = getServiceScheme(req);
+	var serviceScheme = getServiceScheme(req);
 
-    // Ensures that no ID will be NaN
-    if(_.max(services, 'id') != undefined)
+	// Ensures that no ID will be NaN
+	if(_.max(services, 'id') != undefined)
 		serviceScheme.id = _.max(services, 'id').id + 1;
 	else
 		serviceScheme.id = 0;
-
-	serviceScheme.id = _.max(services, 'id').id + 1;
 
 	services.push(serviceScheme);
 
@@ -272,12 +354,10 @@ app.post('/register-pet', function(req, res) {
 	var petScheme = getPetScheme(req);
 
 	// Ensures that no ID will be NaN
-	if(_.max(products, 'id') != undefined)
+	if(_.max(pets, 'id') != undefined)
 		petScheme.id = _.max(pets, 'id').id + 1;
 	else
 		petScheme.id = 0;
-
-	petScheme.id = _.max(pets, 'id').id + 1;
 
 	pets.push(petScheme);
 
@@ -287,42 +367,71 @@ app.post('/register-pet', function(req, res) {
 	});
 });
 
-app.get('/products', function(req,res) {
-	res.status(201).send(products);
+app.post('/register-payment', function(req, res) {
+	var paymentScheme = getPaymentScheme(req);
+
+	// Ensures that no ID will be NaN
+	if(_.max(payments, 'id') != undefined)
+		paymentScheme.id = _.max(payments, 'id').id + 1;
+	else
+		paymentScheme.id = 0;
+
+	payments.push(paymentScheme);
+
+	res.status(201).send({
+		id_token: createIdToken(paymentScheme),
+		access_token: createAccessToken(),
+	});
 });
 
-app.get('/products/:id', function(req,res) {
-	var id = parseInt(req.params.id);
-	var product = _.filter(products, {'id': id})
-	res.status(201).send(product);
+
+app.post('/submit-cart', function(req, res) {
+	var cart = [];
+	req.body.forEach((product) => {
+		var productScheme = getCartScheme(product);
+		cart.push(productScheme);
+	});
+	console.log(cart);
+	carts = cart;
+
+	res.status(201).send({
+		id_token: createIdToken(carts),
+		access_token: createAccessToken(),
+	});
 });
 
-app.get('/pets', function(req,res) {
-	res.status(201).send(pets);
+
+app.post('/new-schedule', function(req, res) {
+	var scheduleScheme = getScheduleScheme(req);
+
+	// Ensures that no ID will be NaN
+	if(_.max(schedules, 'id') != undefined)
+		scheduleScheme.id = _.max(schedules, 'id').id + 1;
+	else
+		scheduleScheme.id = 0;
+
+	schedules.push(scheduleScheme);
+
+	res.status(201).send({
+		id_token: createIdToken(scheduleScheme),
+		access_token: createAccessToken(),
+	});
 });
 
-app.get('/pets/:id', function(req,res) {
-	var id = parseInt(req.params.id);
-	var product = _.filter(pets, {'id': id})
-	res.status(201).send(product);
+app.get('/carts/:id', function(req, res) {
+	var id = req.params.id;
+	carts = _.filter(carts, (product) => {
+		return product.id != id;
+	});
+	console.log(carts);
+
+	res.status(201).send(carts);
 });
 
-app.get('/services', function(req,res) {
-	res.status(201).send(services);
+app.get('/payments', function(req,res) {
+	res.status(201).send(payments);
 });
 
-app.get('/services/:id', function(req,res) {
-	var id = parseInt(req.params.id);
-	var service = _.filter(services, {'id': id})
-	res.status(201).send(service);
-});
-
-app.get('/users', function(req,res) {
-	res.status(201).send(users);
-});
-
-app.get('/users/:id', function(req,res) {
-	var id = parseInt(req.params.id);
-	var user = _.filter(users, {'id': id})
-	res.status(201).send(user);
+app.get('/carts', function(req,res) {
+	res.status(201).send(_.sortBy(carts, 'type'));
 });

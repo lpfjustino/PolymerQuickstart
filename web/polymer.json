@@ -4,9 +4,14 @@
   "fragments": [
     "src/home-page.html",
     "src/cadastro-cliente.html",
+    "src/cadastro-produto.html",
+    "src/cadastro-servico.html",
     "src/venda-servico.html",
     "src/compra-produto.html",
     "src/my-login.html",
+    "src/historico-vendas.html",
+    "src/my-carrinho.html",
+    "src/my-pagamento.html",
     "src/homescreen-admin.html",
     "src/homescreen-usuario.html",
 
